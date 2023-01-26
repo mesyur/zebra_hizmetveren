@@ -42,6 +42,7 @@ dependencies:
   proximity_sensor:
   http_parser:
   image_picker:
+  geocoding:
   flutter_time_picker_spinner:
   flutter_incall_manager:
     git: https://github.com/manozzreddy/flutter-incall-manager.git

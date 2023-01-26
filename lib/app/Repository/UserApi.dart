@@ -145,6 +145,8 @@ class UserApi{
     dio.options.headers["Accept"] = "application/json";
     dio.options.headers["Content-Type"] = "application/json";
     dio.options.responseType = ResponseType.json;
+    print(json.encode(formData));
+    print(LocalStorage().getValue("token"));
     try{
       var response = await dio.request("/user/update",data: json.encode(formData));
       if(response.statusCode == 200){

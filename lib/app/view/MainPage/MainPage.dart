@@ -271,62 +271,69 @@ class MainPage extends GetView<MainPageController>{
                                       const SizedBox(height: 10),
                                       Container(
                                         width: MediaQuery.of(context).size.width,
-                                        height: 25,
+                                        height: 45,
                                         color: Colors.transparent,
                                         margin: const EdgeInsets.only(bottom: 20),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: <Widget>[
-                                            const Image(image: AssetImage('assets/app/logo.png'),height: 100),
+                                            Column(
+                                              children: const [
+                                                Image(image: AssetImage('assets/app/logo.png'),height: 30),
+                                              ],
+                                            ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
-                                                InkWell(
-                                                    splashColor: Colors.transparent,
-                                                    highlightColor: Colors.transparent,
-                                                    onTap: ()async{
-                                                      var selectedLanguage = 'en';
-                                                      LocalStorage().setValue("locale",selectedLanguage);
-                                                      Get.updateLocale(Locale(selectedLanguage));
-                                                    },
-                                                    child: SizedBox(
-                                                        height: 25,
-                                                        child: Center(child: Text("En",style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'en' ? FontWeight.bold : FontWeight.w400),)))),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: InkWell(
+                                                      splashColor: Colors.transparent,
+                                                      highlightColor: Colors.transparent,
+                                                      onTap: ()async{
+                                                        var selectedLanguage = 'en';
+                                                        LocalStorage().setValue("locale",selectedLanguage);
+                                                        Get.updateLocale(Locale(selectedLanguage));
+                                                      },
+                                                      child: SizedBox(
+                                                          height: 25,
+                                                          child: Center(child: Text("En",style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'en' ? FontWeight.bold : FontWeight.w400),)))),
+                                                ),
                                                 const SizedBox(width: 10),
                                                 Container(height: 25,width: 2,color: Colors.black12),
                                                 const SizedBox(width: 10),
-                                                InkWell(
-                                                    splashColor: Colors.transparent,
-                                                    highlightColor: Colors.transparent,
-                                                    onTap: ()async{
-                                                      var selectedLanguage = 'tr';
-                                                      LocalStorage().setValue("locale",selectedLanguage);
-                                                      Get.updateLocale(Locale(selectedLanguage));
+                                                Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: InkWell(
+                                                      splashColor: Colors.transparent,
+                                                      highlightColor: Colors.transparent,
+                                                      onTap: ()async{
+                                                        var selectedLanguage = 'tr';
+                                                        LocalStorage().setValue("locale",selectedLanguage);
+                                                        Get.updateLocale(Locale(selectedLanguage));
 
-                                                    },
-                                                    child:  SizedBox(
-                                                        height: 25,
-                                                        child: Center(child: Text("Tr",style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'tr' ? FontWeight.bold : FontWeight.w400),)))),
+                                                      },
+                                                      child:  SizedBox(
+                                                          height: 25,
+                                                          child: Center(child: Text("Tr",style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'tr' ? FontWeight.bold : FontWeight.w400),)))),
+                                                ),
                                                 const SizedBox(width: 10),
                                                 Container(height: 25,width: 2,color: Colors.black12),
                                                 const SizedBox(width: 10),
-                                                InkWell(
-                                                    splashColor: Colors.transparent,
-                                                    highlightColor: Colors.transparent,
-                                                    onTap: ()async{
-                                                      var selectedLanguage = 'ar';
-                                                      LocalStorage().setValue("locale",selectedLanguage);
-                                                      Get.updateLocale(Locale(selectedLanguage));
-                                                    },
-                                                    child: Column(
-                                                      children:  [
-                                                        SizedBox(
-                                                            height: 25,
-                                                            child: Center(child: Text("Ar",style: TextStyle(fontFamily: 'Tajawal',color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'ar' ? FontWeight.bold : FontWeight.w400),))),
-                                                      ],
-                                                    )),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: InkWell(
+                                                      splashColor: Colors.transparent,
+                                                      highlightColor: Colors.transparent,
+                                                      onTap: ()async{
+                                                        var selectedLanguage = 'ar';
+                                                        LocalStorage().setValue("locale",selectedLanguage);
+                                                        Get.updateLocale(Locale(selectedLanguage));
+                                                      },
+                                                      child: SizedBox(
+                                                          height: 25,
+                                                          child: Center(child: Text("Ar",style: TextStyle(fontFamily: 'Tajawal',color: Colors.black,fontSize: 25,fontWeight: Get.locale?.languageCode == 'ar' ? FontWeight.bold : FontWeight.w400),)))),
+                                                ),
                                               ],
                                             ),
                                           ],

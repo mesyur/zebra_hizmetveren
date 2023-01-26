@@ -107,7 +107,7 @@ class BillingInformationController extends MainPageBaseController<CountriesModel
       hideDialog();
     },onError: (e){
       hideDialog();
-      change(null,status: RxStatus.error());
+    //  change(null,status: RxStatus.error());
     });
   }
 

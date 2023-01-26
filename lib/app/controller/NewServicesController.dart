@@ -3,22 +3,22 @@ import 'dart:convert';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_alert/alert_controller.dart';
 import 'package:flutter_dropdown_alert/model/data_alert.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
 import '../../help/location_service.dart';
 import '../Repository/MainApi.dart';
 import '../Repository/MyServicesApi.dart';
 import '../model/ItemModel.dart';
 import '../model/SubCategory2Model.dart';
-import 'package:http/http.dart' as http;
-
-import '../url/url.dart';
+import '../view/NewServices/widgets/NewServicesMap.dart';
+import '../view/WIDGETS/mapPin.dart';
+import 'package:geocoding/geocoding.dart' as getLatLngByName;
 
 
 
@@ -32,7 +32,7 @@ abstract class NewServicesBaseController<CategoryModel,SubCategoryModel,SubCateg
 class NewServicesController  extends GetxController with StateMixin ,LoadingDialog{
 
 
-
+  LatLng locationStream = const LatLng(0.0,0.0);
   LocationService locationService = LocationService();
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   late TextEditingController noteController;
@@ -55,6 +55,79 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
   RxInt categoryId = 0.obs;
   RxInt subCategoryId = 0.obs;
   List<ChildCategories> childCategories = [];
+
+
+
+
+
+
+  ///***************************** Map
+  ///***********
+  ///Var's
+  late CameraPosition position;
+  late GoogleMapController googleMapController;
+  late TextEditingController searchController;
+  List<Marker> mMarkers = [] ;
+  MapPickerController mapPickerController = MapPickerController();
+  late CameraPosition initialLocation;
+  late LatLng moveLatLng;
+  List<Placemark> placeMarks = [];
+
+
+  /// on create => onCreate
+  onCreate(GoogleMapController controller)async{
+    googleMapController = controller;
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+          bearing: 0,
+          target: myCurrentLocation!,
+          zoom: 18.0
+      ),
+    ));
+  }
+
+
+
+
+  goToMyLocation()async{
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+          bearing: 0,
+          target: LatLng(locationStream.latitude , locationStream.longitude),
+          zoom: 14.0
+      ),
+    ));
+  }
+
+
+
+
+  /// Search By region name
+  Future myCurrentLocationSearch({locationAddress}) async {
+    try{
+      await getLatLngByName.locationFromAddress("$locationAddress").then((placemarks)async{
+        placemarks[0].latitude != null && placemarks[0].longitude != null ? myCurrentLocation = LatLng(placemarks[0].latitude, placemarks[0].longitude) : null;
+        placemarks[0].latitude != null && placemarks[0].longitude != null ?  googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              bearing: 0,
+              target: myCurrentLocation!,
+              zoom: 18.0
+          ),
+        )) : null;
+      }).catchError((error){
+        AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
+      }).timeout(const Duration(seconds: 5));
+    }catch(error){
+      AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
+    }
+  }
+  ///***********
+  ///***************************** Map
+
+
+
+
+
 
   getImageDialog(String titleText,index){
     Get.dialog(
@@ -187,6 +260,17 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(value!.latitude!, value.longitude!);
       selectedRealTimeLocation.value = false;
+      print(myCurrentLocation);
+      print('-----------------------------------------------**');
+      hideDialog();
+      Get.to(const NewServicesMap())?.then((value)async{
+        print(myCurrentLocation);
+        print(placeMarks);
+        await Clipboard.setData(ClipboardData(text: jsonEncode(placeMarks)));
+        print('-----------------------------------------------//');
+      });
+    }).onError((error, stackTrace){
+      AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
       hideDialog();
     });
   }
@@ -301,16 +385,26 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
   }
 
 
+
   @override
   void onInit() {
     noteController = TextEditingController();
+    searchController = TextEditingController();
     super.onInit();
+    locationService.locationStream.listen((event) {
+      locationStream = LatLng(event.latitude!, event.longitude!);
+    });
+    initialLocation = CameraPosition(
+      target: myCurrentLocation!,
+      zoom: 18.0,
+    );
   }
 
 
   @override
   void dispose() {
     noteController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 

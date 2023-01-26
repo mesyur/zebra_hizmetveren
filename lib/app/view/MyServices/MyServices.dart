@@ -20,7 +20,7 @@ class MyServices extends GetView<MyServicesController>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(bottom: 25),
               child: SizedBox(
                 width: 250,
                 height: 50,
