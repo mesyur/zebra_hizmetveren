@@ -119,6 +119,7 @@ class MyServicesApi{
         return Future.error("\nيرجى اعادة المحاولة من جديد");
       }
     }on DioError catch(e){
+      print(e.response);
       return Future.error("\nيرجى اعادة المحاولة من جديد");
     }
   }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../../controller/EditeMyServicesPageController.dart';
 import '../../../controller/NewServicesController.dart';
 import '../../WIDGETS/mapPin.dart';
 
 
-class NewServicesMap extends GetView<NewServicesController>{
-  const NewServicesMap({super.key});
+class NewServicesEditeMap extends GetView<EditeMyServicesPageController>{
+  const NewServicesEditeMap({super.key});
 
   @override
   Widget build(BuildContext context) {

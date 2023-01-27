@@ -1,23 +1,27 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_alert/alert_controller.dart';
 import 'package:flutter_dropdown_alert/model/data_alert.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
 import '../../help/location_service.dart';
 import '../Repository/MyServicesApi.dart';
 import '../model/ItemModel.dart';
 import '../model/ServicesByIdModel.dart';
 import '../model/SubCategory2Model.dart';
-import 'package:http/http.dart' as http;
+import '../view/EditeMyServicesPage/EditeMyServicesPage.dart';
+import '../view/EditeMyServicesPage/widgets/NewServicesEditeMap.dart';
+import '../view/NewServices/widgets/NewServicesMap.dart';
+import 'package:geocoding/geocoding.dart' as getLatLngByName;
+
+import '../view/WIDGETS/mapPin.dart';
 
 
 
@@ -48,6 +52,74 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
   RxInt categoryId = 0.obs;
   RxInt subCategoryId = 0.obs;
   List<ChildCategories> childCategories = [];
+  late LatLng moveLatLng;
+  List<Placemark> placeMarks = [];
+  LatLng locationStream = const LatLng(0.0,0.0);
+
+
+
+  ///***************************** Map
+  ///***********
+  ///Var's
+  late CameraPosition position;
+  late GoogleMapController googleMapController;
+  late TextEditingController searchController;
+  List<Marker> mMarkers = [] ;
+  MapPickerController mapPickerController = MapPickerController();
+  late CameraPosition initialLocation;
+
+
+
+  /// on create => onCreate
+  onCreate(GoogleMapController controller)async{
+    googleMapController = controller;
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+          bearing: 0,
+          target: myCurrentLocation!,
+          zoom: 18.0
+      ),
+    ));
+  }
+
+
+
+
+  goToMyLocation()async{
+    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+          bearing: 0,
+          target: LatLng(locationStream.latitude , locationStream.longitude),
+          zoom: 14.0
+      ),
+    ));
+  }
+
+
+
+
+  /// Search By region name
+  Future myCurrentLocationSearch({locationAddress}) async {
+    try{
+      await getLatLngByName.locationFromAddress("$locationAddress").then((placemarks)async{
+        placemarks[0].latitude != null && placemarks[0].longitude != null ? myCurrentLocation = LatLng(placemarks[0].latitude, placemarks[0].longitude) : null;
+        placemarks[0].latitude != null && placemarks[0].longitude != null ?  googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              bearing: 0,
+              target: myCurrentLocation!,
+              zoom: 18.0
+          ),
+        )) : null;
+      }).catchError((error){
+        AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
+      }).timeout(const Duration(seconds: 5));
+    }catch(error){
+      AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
+    }
+  }
+  ///***********
+  ///***************************** Map
+
 
 
 
@@ -140,6 +212,12 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
       myCurrentLocation = LatLng(value!.latitude!, value.longitude!);
       selectedRealTimeLocation.value = false;
       hideDialog();
+      Get.to(const NewServicesEditeMap())?.then((value)async{
+        await Clipboard.setData(ClipboardData(text: jsonEncode(placeMarks)));
+      });
+    }).onError((error, stackTrace){
+      AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
+      hideDialog();
     });
   }
 
@@ -225,19 +303,114 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
   }
 
 
+
+  showChoseDialog(){
+    Get.dialog(
+      barrierDismissible: true,
+      useSafeArea: false,
+      WillPopScope(
+        onWillPop: ()async => true,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+              builder: (BuildContext _, StateSetter setState) {
+                return Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Image.asset('assets/categoryIcons/address.png',height: 220,),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        const Text('Konumunu Onayla !',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+
+
+
+                        const SizedBox(height: 5),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text('Tam olarak haritada işaretlediğin noktada hizmet verdiğini onaylıyor musun ?'),
+                        ),
+
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                          ),
+                          onPressed: () async{
+                            Get.back();
+                            Get.back();
+                          },
+                          child: const Text("Evet, konumum doğru !",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        GestureDetector(
+                            onTap: (){
+                              Get.back();
+                              goToMyLocation();
+                            },
+                            child: const Text("Hayır, düzenlemel istiyorum !",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold))),
+                        const SizedBox(height: 20),
+
+
+
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
   @override
   void onInit() {
     noteController = TextEditingController(text: arg.data.description);
+    searchController = TextEditingController();
     myCurrentLocation = LatLng(arg.data.lat, arg.data.lng);
     selectedRealTimeLocation.value = arg.data.liveLocation == 0 ? false : true;
     setImage();
     super.onInit();
+    locationService.locationStream.listen((event) {
+      locationStream = LatLng(event.latitude!, event.longitude!);
+    });
+    initialLocation = CameraPosition(
+      target: myCurrentLocation!,
+      zoom: 18.0,
+    );
   }
 
 
   @override
   void dispose() {
     noteController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 

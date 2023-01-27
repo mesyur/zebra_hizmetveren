@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../controller/EditeMyServicesPageController.dart';
-import '../../controller/NewServicesController.dart';
 import '../../model/ItemModel.dart';
 
 class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{

@@ -260,14 +260,9 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(value!.latitude!, value.longitude!);
       selectedRealTimeLocation.value = false;
-      print(myCurrentLocation);
-      print('-----------------------------------------------**');
       hideDialog();
       Get.to(const NewServicesMap())?.then((value)async{
-        print(myCurrentLocation);
-        print(placeMarks);
         await Clipboard.setData(ClipboardData(text: jsonEncode(placeMarks)));
-        print('-----------------------------------------------//');
       });
     }).onError((error, stackTrace){
       AlertController.show("خطأ", 'حدث خطأ يرجى اعادة المحاولة', TypeAlert.error);
@@ -289,7 +284,7 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
       }else if(childCategories.isNotEmpty && subCategoryId.value == 0){
         noteError.value = false;
         AlertController.show("Sub Category", "Please select Sub Category !", TypeAlert.warning);
-      }else if(!selectedRealTimeLocation.value && myCurrentLocation?.latitude == 0.0 && myCurrentLocation?.longitude == 0.0){
+      }else if(myCurrentLocation?.latitude == 0.0 && myCurrentLocation?.longitude == 0.0){
         noteError.value = false;
         AlertController.show("Location", "Please select Your Location !", TypeAlert.warning);
       }else{
@@ -382,6 +377,90 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
         }
       }
     }
+  }
+
+
+
+
+  showChoseDialog(){
+    Get.dialog(
+      barrierDismissible: true,
+      useSafeArea: false,
+      WillPopScope(
+        onWillPop: ()async => true,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+              builder: (BuildContext _, StateSetter setState) {
+                return Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Image.asset('assets/categoryIcons/address.png',height: 220,),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        const Text('Konumunu Onayla !',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+
+
+
+                        const SizedBox(height: 5),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text('Tam olarak haritada işaretlediğin noktada hizmet verdiğini onaylıyor musun ?'),
+                        ),
+
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                          ),
+                          onPressed: () async{
+                            Get.back();
+                            Get.back();
+                          },
+                          child: const Text("Evet, konumum doğru !",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        GestureDetector(
+                            onTap: (){
+                              Get.back();
+                              goToMyLocation();
+                            },
+                            child: const Text("Hayır, düzenlemel istiyorum !",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold))),
+                        const SizedBox(height: 20),
+
+
+
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
   }
 
 
