@@ -137,7 +137,7 @@ class CallHoursController extends GetxController with StateMixin<CallHoursModel>
     };
 
     isEnabled.value ? hoursMap.forEach((key, value) {
-      hoursMap[key] = "00:00-00:30";
+      hoursMap[key] = "09:00-23:00";
     })
         :
     hoursMap.forEach((key, value) {

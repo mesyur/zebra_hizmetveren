@@ -91,7 +91,7 @@ class CallHours extends GetView<CallHoursController>{
                     children: [
                       SizedBox(width: 100,child: Text(controller.dayeList[index],style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.bold))),
                       const SizedBox(width: 0),
-                      timeRange(18,controller.callHours.indexOf(controller.callHours.last),index)
+                      timeRange(18,controller.callHours.indexOf(controller.callHours.last)-1,index)
                     ],
                   ),
                 )),
