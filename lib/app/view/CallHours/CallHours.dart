@@ -1,11 +1,8 @@
-import 'package:bs_flutter_buttons/bs_flutter_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:zebraserviceprovider/app/controller/CallHours.dart';
 
-import '../../../help/hive/localStorage.dart';
 
 class CallHours extends GetView<CallHoursController>{
   const CallHours({super.key});
@@ -94,7 +91,7 @@ class CallHours extends GetView<CallHoursController>{
                     children: [
                       SizedBox(width: 100,child: Text(controller.dayeList[index],style: const TextStyle(color: Colors.black,fontSize: 17,fontWeight: FontWeight.bold))),
                       const SizedBox(width: 0),
-                      timeRange(0,controller.callHours.indexOf(controller.callHours.last),index)
+                      timeRange(18,controller.callHours.indexOf(controller.callHours.last),index)
                     ],
                   ),
                 )),

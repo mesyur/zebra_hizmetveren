@@ -226,10 +226,7 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
 
   updateServices()async{
     if(formState.currentState!.validate()){
-      if(noteController.text.removeAllWhitespace.length < 70){
-        noteError.value = true;
-        AlertController.show("Note", "Açıklama 70 karakterden az olmamalıdır !", TypeAlert.warning);
-      }else if(!selectedRealTimeLocation.value && myCurrentLocation?.latitude == 0.0 && myCurrentLocation?.longitude == 0.0){
+      if(!selectedRealTimeLocation.value && myCurrentLocation?.latitude == 0.0 && myCurrentLocation?.longitude == 0.0){
         noteError.value = false;
         AlertController.show("Location", "Please select Your Location !", TypeAlert.warning);
       }else{

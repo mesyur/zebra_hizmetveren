@@ -259,6 +259,7 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
     showDialogBox();
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(value!.latitude!, value.longitude!);
+      //myCurrentLocation?.longitude != 0.0 ? myCurrentLocation = LatLng(value!.latitude!, value.longitude!) : null;
       selectedRealTimeLocation.value = false;
       hideDialog();
       Get.to(const NewServicesMap())?.then((value)async{
@@ -275,10 +276,7 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
 
   saveNewServices()async{
     if(formState.currentState!.validate()){
-      if(noteController.text.removeAllWhitespace.length < 70){
-        noteError.value = true;
-        AlertController.show("Note", "Açıklama 70 karakterden az olmamalıdır !", TypeAlert.warning);
-      }else if(categoryId.value == 0){
+      if(categoryId.value == 0){
         noteError.value = false;
         AlertController.show("Category", "Please select Category !", TypeAlert.warning);
       }else if(childCategories.isNotEmpty && subCategoryId.value == 0){

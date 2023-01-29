@@ -21,6 +21,7 @@ class Profile extends GetView<ProfileController>{
       appBar: AppBar(
         title: const Text("Profile", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
         centerTitle: true,
+        surfaceTintColor: Colors.white,
       ),
         body: controller.obx((state) => ListView(
           children: [
@@ -61,7 +62,7 @@ class Profile extends GetView<ProfileController>{
                       borderWidth: 1,
                       borderColor: const [Colors.black12],
                       activeFgColor: Colors.black,
-                      labels: ['Ybancı'.tr, 'Türk'.tr, 'undefined'.tr],
+                      labels: ['Yabancı'.tr, 'Türk'.tr, 'undefined'.tr],
                       onToggle: (index) {
                         if(controller.selectedCitizenIndex.value != index){
                           controller.selectedCitizenIndex.value = index!;
@@ -111,7 +112,7 @@ class Profile extends GetView<ProfileController>{
                                   controller: controller.firstNameController,
                                   textAlignVertical: TextAlignVertical.center,
                                   cursorColor: const Color(0xFF26242e),
-                                  style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Color(0xff363636)),
+                                  style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Colors.black12.withOpacity(0.2)),
                                   validator: (value){
                                     if(value!.isEmpty){
                                       controller.menuItems0 = [ItemModel('Error First Name !', Icons.verified_user_outlined)];
@@ -221,7 +222,7 @@ class Profile extends GetView<ProfileController>{
                                   controller: controller.lastNameController,
                                   textAlignVertical: TextAlignVertical.center,
                                   cursorColor: const Color(0xFF26242e),
-                                  style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Color(0xff363636)),
+                                  style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Colors.black12.withOpacity(0.2)),
                                   validator: (value){
                                     if(value!.isEmpty){
                                       controller.menuItems1 = [
@@ -587,7 +588,7 @@ class Profile extends GetView<ProfileController>{
                               cursorColor: const Color(0xFF26242e),
                               maxLength: 10,
                               inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-                              style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Color(0xff363636)),
+                              style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 0,color: Colors.black12.withOpacity(0.2)),
                               onChanged: (x){
                                 x.startsWith("0") ? controller.phoneNumberController.clear() : null;
                               },
@@ -661,7 +662,7 @@ class Profile extends GetView<ProfileController>{
                                                 child: Image(image: AssetImage("assets/icons/error.gif"),)),
                                           ],
                                         ),
-                                      )) : const Icon(Icons.phone, color: Colors.black54,size: 20,),
+                                      )) : Icon(Icons.phone, color: Colors.black12.withOpacity(0.2),size: 20,),
                                   hintText: 'Phone Number',
                                   fillColor: const Color(0xffffffff),
                                   filled: true
@@ -669,35 +670,35 @@ class Profile extends GetView<ProfileController>{
                             ),
                           ),
 
-                          Positioned(
-                            right: 10,
-                            child: Container(
-                              child: controller.flagMyIso.value != '' ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('${controller.dialCodeMyIso}',textDirection: TextDirection.rtl,style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12,letterSpacing: 0,color: Color(0xff363636)),strutStyle: const StrutStyle(forceStrutHeight: true,height: 1,)),
-                                  const SizedBox(width: 5),
-                                  Image(
-                                    height: 15,
-                                    image: AssetImage(controller.flagMyIso.value),
-                                  ),
-                                ],
-                              ) :
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Text('90+',textDirection: TextDirection.rtl,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12,letterSpacing: 0,color: Color(0xff363636)),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
-                                  SizedBox(width: 5),
-                                  Image(
-                                    height: 15,
-                                    image: AssetImage("assets/flags/tr.png"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   right: 10,
+                          //   child: Container(
+                          //     child: controller.flagMyIso.value != '' ? Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: [
+                          //         Text('${controller.dialCodeMyIso}',textDirection: TextDirection.rtl,style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12,letterSpacing: 0,color: Color(0xff363636)),strutStyle: const StrutStyle(forceStrutHeight: true,height: 1,)),
+                          //         const SizedBox(width: 5),
+                          //         Image(
+                          //           height: 15,
+                          //           image: AssetImage(controller.flagMyIso.value),
+                          //         ),
+                          //       ],
+                          //     ) :
+                          //     Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       children: const [
+                          //         Text('90+',textDirection: TextDirection.rtl,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12,letterSpacing: 0,color: Color(0xff363636)),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                          //         SizedBox(width: 5),
+                          //         Image(
+                          //           height: 15,
+                          //           image: AssetImage("assets/flags/tr.png"),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     )),
@@ -734,6 +735,10 @@ class Profile extends GetView<ProfileController>{
                         ),
                       ),
                     ),
+
+
+
+
                     const SizedBox(height: 50),
                     SizedBox(
                       width: 150,
@@ -747,7 +752,7 @@ class Profile extends GetView<ProfileController>{
                               text: 'Do you want to logout ?',
                               confirmBtnText: 'Yes',
                               cancelBtnText: 'No',
-                              confirmBtnColor: Colors.redAccent,
+                              confirmBtnColor: Colors.white,
                               showCancelBtn: true,
                               onConfirmBtnTap: (){
                                 LocalStorage().setValue("login",false);
@@ -755,17 +760,21 @@ class Profile extends GetView<ProfileController>{
                               }
                           );
                         },
-                        color: Colors.orangeAccent,
+                        color: Colors.white,
                         shape: const RoundedRectangleBorder(
                             side: BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.all(Radius.circular(10.0))
                         ),
                         child: const Padding(
                           padding: EdgeInsets.only(top: 0),
-                          child: Text('LogOut', style: TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.bold),),
+                          child: Text('Log Out', style: TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.bold),),
                         ),
                       ),
                     ),
+
+
+
+
                     const SizedBox(height: 10),
                     SizedBox(
                       width: 150,
@@ -779,14 +788,14 @@ class Profile extends GetView<ProfileController>{
                               text: 'Do you want to delete your account ?',
                               confirmBtnText: 'Yes',
                               cancelBtnText: 'No',
-                              confirmBtnColor: Colors.redAccent,
+                              confirmBtnColor: Colors.white,
                               showCancelBtn: true,
                               onConfirmBtnTap: (){
                                 controller.deleteUser(context);
                               }
                           );
                         },
-                        color: Colors.redAccent,
+                        color: Colors.white,
                         shape: const RoundedRectangleBorder(
                             side: BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.all(Radius.circular(10.0))
@@ -797,6 +806,10 @@ class Profile extends GetView<ProfileController>{
                         ),
                       ),
                     ),
+
+
+
+
                   ],
                 ),
               ),

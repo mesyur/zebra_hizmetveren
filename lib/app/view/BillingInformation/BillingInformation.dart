@@ -15,6 +15,7 @@ class BillingInformation extends GetView<BillingInformationController>{
         appBar: AppBar(
           title: const Text("Fatura Bilgileri", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
           centerTitle: true,
+          surfaceTintColor: Colors.white,
         ),
         body: Stack(
           alignment: Alignment.center,

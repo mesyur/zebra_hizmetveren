@@ -13,37 +13,40 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Yeni Hizmet Ekle", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+          title: const Text("Hizmeti Düzenle", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
           centerTitle: true,
           surfaceTintColor: Colors.white,
         ),
-        bottomNavigationBar: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: 250,
-                height: 50,
-                child: MaterialButton(
-                  elevation: 0,
-                  onPressed: (){
-                    controller.updateServices();
-                  },
-                  color: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black12),
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 0),
-                    child: Text('🔄 Update Services', style: TextStyle(color: Colors.black87, fontSize: 20.0, fontWeight: FontWeight.bold),),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.only(bottom: 40),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 250,
+                  height: 50,
+                  child: MaterialButton(
+                    elevation: 0,
+                    onPressed: (){
+                      controller.updateServices();
+                    },
+                    color: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.black12),
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 0),
+                      child: Text('Update Services', style: TextStyle(color: Colors.black87, fontSize: 20.0, fontWeight: FontWeight.bold),),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         body: ListView(
           children: [
@@ -59,6 +62,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 5),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black12),
                         borderRadius: const BorderRadius.only(
@@ -76,12 +80,13 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                           ),
                         ],
                       ),
-                      height: 130,
+                      // height: 140,
                       child: TextFormField(
                         onTap: (){
                           controller.noteError.value = false;
                         },
                         maxLines: 4,
+                        maxLength: 140,
                         controller: controller.noteController,
                         textAlignVertical: TextAlignVertical.center,
                         keyboardType: TextInputType.text,
@@ -104,7 +109,9 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                                 style: BorderStyle.none,
                               ),
                             ),
-                            counterText: "",
+                            // counterText: "",
+                            //  contentPadding: const EdgeInsets.all(15),
+                            // suffixText: '${controller.noteController.text.length} / 140',
                             hintStyle: const TextStyle(fontSize: 12,),
                             errorStyle: const TextStyle(height: 0.001,color: Colors.transparent),
                             suffixIcon: const Icon(Icons.phone_enabled, color: Colors.transparent,),
@@ -165,7 +172,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                                 ],
                               ),
                             ),
-                            hintText: 'Verdiğin bu tüzmeti\n140 karakter lie açıkla ...',
+                            hintText: 'Verdiğin bu hizmeti\nmaksimum 140 karakter ile açıkla…',
                             fillColor: const Color(0xffffffff),
                             filled: true
                         ),
@@ -184,7 +191,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
 
             /// Image
             const SizedBox(height: 20),
-            const Center(child: Text("verdigin hizmetleri özetleyen fotoğraf yükleme", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15.0))),
+            const Center(child: Text("Verdiğin hizmeti özetleyen fotoğrafları yükle", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15.0))),
             const SizedBox(height: 10),
             Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -196,7 +203,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                 child: Container(
                     height: 50,width: 50,
                     padding: const EdgeInsets.all(1),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),border: Border.all(width: 1),color: Colors.black12),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),border: Border.all(width: 1,color: Colors.black12),color: Colors.white),
                     child: controller.imageList[index] == '' ? const Center(
                       child: Icon(Icons.add),
                     ) :
@@ -228,7 +235,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                       ),
                       child: const Padding(
                         padding: EdgeInsets.only(top: 0),
-                        child: Text('🌍 Hizmet Vereceğiniz Konumu Seçin', style: TextStyle(color: Colors.black87, fontSize: 15.0, fontWeight: FontWeight.bold),),
+                        child: Text('Hizmet vereceğin konumu haritadan seç', style: TextStyle(color: Colors.black87, fontSize: 15.0, fontWeight: FontWeight.bold),),
                       ),
                     ),
                   ),
@@ -261,7 +268,7 @@ class EditeMyServicesPage extends GetView<EditeMyServicesPageController>{
                       ],
                     ),
                     const SizedBox(width: 10),
-                    const Text('Canli Konumu Goster', style: TextStyle(color: Colors.black87, fontSize: 15.0, fontWeight: FontWeight.bold)),
+                    const Text('Canlı konumunu paylaş', style: TextStyle(color: Colors.black87, fontSize: 15.0, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
