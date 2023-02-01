@@ -42,6 +42,8 @@ dependencies:
   proximity_sensor:
   http_parser:
   image_picker:
+  firebase_messaging:
+  firebase_core:
   geocoding:
   flutter_time_picker_spinner:
   flutter_incall_manager:

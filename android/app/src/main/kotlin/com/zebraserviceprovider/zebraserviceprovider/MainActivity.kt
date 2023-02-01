@@ -1,4 +1,4 @@
-package com.example.zebraserviceprovider
+package com.zebraserviceprovider.zebraserviceprovider
 
 import io.flutter.embedding.android.FlutterActivity
 

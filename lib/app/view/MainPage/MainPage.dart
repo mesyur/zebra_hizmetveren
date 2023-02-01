@@ -209,7 +209,7 @@ class MainPage extends GetView<MainPageController>{
                                       const SizedBox(height: 20),
                                       GestureDetector(
                                         onLongPress: (){
-                                          /// ToDo Delete
+                                          /// ToDo Delete onLongPress
                                           Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}]);
                                         },
                                         onTap: (){

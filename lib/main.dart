@@ -1,6 +1,8 @@
 import 'dart:io';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_alert/dropdown_alert.dart';
@@ -36,7 +38,12 @@ Future<void> _firebaseMessagingBackgroundHandler(message)async{}
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
 
-
+  /// Firebase
+  await Firebase.initializeApp();
+  FCM fcm = FCM();
+  fcm.initialize();
+  FirebaseMessaging.instance;
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   /// Firebase
   // await Firebase.initializeApp();
