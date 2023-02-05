@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+//import 'package:advanced_audio_manager/advanced_audio_manager.dart';
+//import 'package:advanced_audio_manager/advanced_audio_manager.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_incall_manager/flutter_incall_manager.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:zebraserviceprovider/help/loadingClass.dart';
+import '../../help/loadingClass.dart';
 import '../url/url.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -19,7 +21,7 @@ import 'package:flutter/foundation.dart' as foundation;
 
 class CallController extends GetxController with LoadingDialog{
 
-  var currentUuid;
+
   final localRenderer = RTCVideoRenderer();
   final remoteRenderer = RTCVideoRenderer();
   late MediaStream localStream;
@@ -49,7 +51,8 @@ class CallController extends GetxController with LoadingDialog{
     await remoteRenderer.initialize();
     await initSocket();
     await joinRoom();
-    listenSensor();
+   // await FlutterAudioManager.changeToReceiver();
+    //listenSensor();
     init1();
   }
 
@@ -141,7 +144,6 @@ class CallController extends GetxController with LoadingDialog{
   void onInit() {
     super.onInit();
     socketRoom = Get.arguments[0]["socketChannel"];
-    currentUuid = Get.arguments[1]["id"];
     init();
   }
 
@@ -177,16 +179,16 @@ class CallController extends GetxController with LoadingDialog{
       }
     };
     _streamSubscription = ProximitySensor.events.listen((int event) {
-        callAccepted.value = true;
-        isActive ? isNear.value = (event > 0) ? true : false : false;
-        isActive ? isNear.value ? IncallManager().turnScreenOn() : IncallManager().turnScreenOff() : IncallManager().turnScreenOn();
+      callAccepted.value = true;
+      isActive ? isNear.value = (event > 0) ? true : false : false;
+      isActive ? isNear.value ? IncallManager().turnScreenOn() : IncallManager().turnScreenOff() : IncallManager().turnScreenOn();
     });
   }
 
 
   Future<void> init1() async {
-    timerController.start(disableNotifyListeners: true);
-    // FlutterAudioManagerPlus.setListener(() async {
+     timerController.start(disableNotifyListeners: true);
+    // FlutterAudioManager.setListener(() async {
     //   await _getInput();
     //   update();
     // });
@@ -195,26 +197,27 @@ class CallController extends GetxController with LoadingDialog{
 
 
   _getInput() async {
-   // currentInput = await FlutterAudioManagerPlus.getCurrentOutput();
+    IncallManager().setSpeakerphoneOn(false);
+   // GetPlatform.isAndroid ? currentInput = await FlutterAudioManager.getCurrentOutput() : null;
   }
 
 
 
   soundOutPut()async{
     // if (currentInput.port == AudioPort.receiver) {
-    //   await FlutterAudioManagerPlus.changeToSpeaker();
+    //   await FlutterAudioManager.changeToSpeaker();
     // } else {
-    //   await FlutterAudioManagerPlus.changeToReceiver();
+    //   await FlutterAudioManager.changeToReceiver();
     // }
-    await _getInput();
-      speaker.value = !speaker.value;
+    // await _getInput();
+    speaker.value = !speaker.value;
   }
 
 
   void toggleAudio() async {
     if (localStream == null) throw Exception('Stream is not initialized');
     Helper.setMicrophoneMute(isFirstAudio.value, localStream.getAudioTracks().first);
-      isFirstAudio.value = !isFirstAudio.value;
+    isFirstAudio.value = !isFirstAudio.value;
   }
 
 

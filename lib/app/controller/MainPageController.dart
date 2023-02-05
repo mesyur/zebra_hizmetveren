@@ -221,7 +221,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   ///*********************************************
 
 
-  static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
 
   @override
   void onReady() {
@@ -232,7 +232,6 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     getMyServicesDetail();
     callBack();
     WidgetsBinding.instance.addObserver(this);
-    firebaseMessaging.subscribeToTopic("${LocalStorage().getValue("id")}");
   }
 
 

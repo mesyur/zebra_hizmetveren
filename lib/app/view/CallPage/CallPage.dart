@@ -167,8 +167,6 @@ class CallPage extends GetView<CallController>{
                               // globals.socket.emit("cancel",[{
                               //   "id" : widget.otherProfileData["id"],
                               // }]);
-                              print('---------------------------------------');
-                              print(controller.currentUuid);
                               await FlutterCallkitIncoming.endAllCalls();
                               Get.back();
                             },
@@ -211,8 +209,6 @@ class CallPage extends GetView<CallController>{
                                 // globals.socket.emit("cancel",[{
                                 //   "id" : widget.otherProfileData["id"],
                                 // }]);
-                                print('---------------------------------------');
-                                print(controller.currentUuid);
                                 await FlutterCallkitIncoming.endAllCalls();
                                 Get.back();
                               },
