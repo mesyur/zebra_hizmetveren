@@ -1,17 +1,17 @@
 import 'dart:io';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_alert/dropdown_alert.dart';
+import 'package:flutter_incall_manager/flutter_incall_manager.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'app/bindings/InitialBinding.dart';
-import 'app/bindings/IntroBinding.dart';
+import 'app/model/CallSystemModel.dart';
 import 'app/routs/appRouts.dart';
 import 'error.dart';
 import 'help/FCM.dart';
@@ -26,12 +26,13 @@ import 'help/translation.dart';
 //flutter pub pub run flutter_native_splash:create
 
 
-Future<void> _firebaseMessagingBackgroundHandler(message)async{}
-
-
-
-
-
+Future<void> _firebaseMessagingBackgroundHandler(message)async{
+  await Firebase.initializeApp();
+  print("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
+  IncallManager().startRingtone(RingtoneUriType.BUNDLE, 'ios_category', 1);
+  CallSystemModel().showCallkitIncoming(const Uuid().v4());
+  print("*/*/*/*/*/*/*/*/*===--+-*+-+--***--++//===/*/*/*");
+}
 
 
 
@@ -43,6 +44,11 @@ void main()async{
   FCM fcm = FCM();
   fcm.initialize();
   FirebaseMessaging.instance;
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   /// Firebase
@@ -68,8 +74,17 @@ void main()async{
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
+
+
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(

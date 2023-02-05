@@ -19,7 +19,7 @@ import 'package:flutter/foundation.dart' as foundation;
 
 class CallController extends GetxController with LoadingDialog{
 
-
+  var currentUuid;
   final localRenderer = RTCVideoRenderer();
   final remoteRenderer = RTCVideoRenderer();
   late MediaStream localStream;
@@ -141,6 +141,7 @@ class CallController extends GetxController with LoadingDialog{
   void onInit() {
     super.onInit();
     socketRoom = Get.arguments[0]["socketChannel"];
+    currentUuid = Get.arguments[1]["id"];
     init();
   }
 

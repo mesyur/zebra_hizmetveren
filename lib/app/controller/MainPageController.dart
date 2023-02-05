@@ -1,22 +1,20 @@
-import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_callkit_incoming/entities/call_event.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_incall_manager/flutter_incall_manager.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:zebraserviceprovider/help/hive/localStorage.dart';
 import 'package:zebraserviceprovider/help/location_service.dart';
 import '../../help/chatStream.dart';
+import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
-import '../Repository/MainApi.dart';
 import '../Repository/MyServicesApi.dart';
 import '../model/CategoryModel.dart';
-import '../model/ItemModel.dart';
 import '../model/ServicesDetailModel.dart';
 import '../model/SubCategory2Model.dart';
 import '../model/SubCategoryModel.dart';
 import '../view/WIDGETS/mapPin.dart';
-import 'CallController.dart';
 import 'InitialController.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -27,7 +25,7 @@ class MyState<T1,T2,T3>{
   MyState({this.item1,this.item2,this.item3});
 }
 
-abstract class MainPageBaseController<T1,T2,T3> extends GetxController with StateMixin<MyState<T1,T2,T3>> ,LoadingDialog{}
+abstract class MainPageBaseController<T1,T2,T3> extends GetxController with StateMixin<MyState<T1,T2,T3>> ,LoadingDialog, WidgetsBindingObserver{}
 
 
 class MainPageController extends MainPageBaseController<CategoryModel,SubCategoryModel,SubCategory2Model>{
@@ -44,6 +42,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   BitmapDescriptor pinLocationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor pinLocationIcon1 = BitmapDescriptor.defaultMarker;
   late ServicesDetailModel servicesDetailModel;
+  bool loadingMap = true;
 
   routeToCallPage(){
     Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}])?.then((value){
@@ -68,6 +67,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(double.parse(value!.latitude!.toString()), double.parse(value.longitude!.toString()));
       myCurrentLocationForGoToMyLocation = LatLng(double.parse(value.latitude!.toString()), double.parse(value.longitude!.toString()));
+      checkAndNavigationCallingPage();
       hideDialog();
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -131,13 +131,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
           "longitude": e.longitude,
           "heading": e.heading,
           "busy": false,
-
-
-
           "userData": servicesDetailModel.data,
-
-
-
         }]
         ) : null;
       });
@@ -147,6 +141,88 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   }
 
 
+
+
+  callBack(){
+    FlutterCallkitIncoming.onEvent.listen((event) async{
+      switch (event!.event) {
+        case Event.ACTION_CALL_INCOMING:
+          break;
+        case Event.ACTION_CALL_START:
+          break;
+        case Event.ACTION_CALL_ACCEPT:
+          var calls = await FlutterCallkitIncoming.activeCalls();
+          if (calls is List) {
+            if (calls.isNotEmpty) {
+              Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": calls[0]['id']}]);
+              return calls[0];
+            } else {
+            }
+          }
+          break;
+        case Event.ACTION_CALL_DECLINE:
+          break;
+        case Event.ACTION_CALL_ENDED:
+          break;
+        case Event.ACTION_CALL_TIMEOUT:
+          break;
+        case Event.ACTION_CALL_CALLBACK:
+          break;
+        case Event.ACTION_CALL_TOGGLE_HOLD:
+          break;
+        case Event.ACTION_CALL_TOGGLE_MUTE:
+          break;
+        case Event.ACTION_CALL_TOGGLE_DMTF:
+          break;
+        case Event.ACTION_CALL_TOGGLE_GROUP:
+          break;
+        case Event.ACTION_CALL_TOGGLE_AUDIO_SESSION:
+          break;
+        case Event.ACTION_DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP:
+          break;
+      }
+    });
+  }
+
+
+
+  ///*********************************************
+  String? _currentUuid;
+  getCurrentCall() async {
+    //check current call from pushkit if possible
+    var calls = await FlutterCallkitIncoming.activeCalls();
+    if (calls is List) {
+      if (calls.isNotEmpty) {
+        print('DATA: $calls');
+        _currentUuid = calls[0]['id'];
+        return calls[0];
+      } else {
+        _currentUuid = "";
+        return null;
+      }
+    }
+  }
+
+  checkAndNavigationCallingPage() async {
+    var currentCall = await getCurrentCall();
+    if (currentCall != null) {
+     // await Future.delayed(const Duration(seconds: 3));
+        Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": _currentUuid}]);
+    }
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      //Check call when open app from background
+      checkAndNavigationCallingPage();
+    }
+  }
+  ///*********************************************
+
+
+  static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
   @override
   void onReady() {
     super.onReady();
@@ -154,6 +230,9 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
       goToMyLocation();
     }catch(e){}
     getMyServicesDetail();
+    callBack();
+    WidgetsBinding.instance.addObserver(this);
+    firebaseMessaging.subscribeToTopic("${LocalStorage().getValue("id")}");
   }
 
 

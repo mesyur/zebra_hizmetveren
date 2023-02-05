@@ -56,6 +56,15 @@
     <key>NSMicrophoneUsageDescription</key>
     <string>this application needs access to the microphone</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
+
+	  <key>UIBackgroundModes</key>
+      <array>
+          <string>processing</string>
+          <string>remote-notification</string>
+          <string>voip</string>
+      </array>
+
+
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>

@@ -31,6 +31,7 @@ import '../view/Help/HelpPages/LegalInformation/LegalInformation.dart';
 import '../view/Help/HelpPages/SssPage/Sss.dart';
 import '../view/Intro/Intro.dart';
 import '../view/LastCall/BlockedUsers.dart';
+import '../view/LastCall/FavoriteUsers.dart';
 import '../view/LastCall/LastCall.dart';
 import '../view/MyServices/MyServices.dart';
 import '../view/NewServices/NewServices.dart';
@@ -153,6 +154,11 @@ appRoutes() => [
   GetPage(
       name: '/BlockedUsers',
       page: () => const BlockedUsers(),
+      transitionDuration: const Duration(milliseconds: 0)
+  ),
+  GetPage(
+      name: '/FavoriteUsers',
+      page: () => const FavoriteUsers(),
       transitionDuration: const Duration(milliseconds: 0)
   ),
 ];

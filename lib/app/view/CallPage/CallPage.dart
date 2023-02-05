@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:get/get.dart';
 import '../../../help/hive/localStorage.dart';
 import '../../controller/CallController.dart';
@@ -162,10 +163,13 @@ class CallPage extends GetView<CallController>{
                         controller.imCaller.value && !controller.callAccepted.value ?
                         Center(
                           child: GestureDetector(
-                            onTap: (){
+                            onTap: ()async{
                               // globals.socket.emit("cancel",[{
                               //   "id" : widget.otherProfileData["id"],
                               // }]);
+                              print('---------------------------------------');
+                              print(controller.currentUuid);
+                              await FlutterCallkitIncoming.endAllCalls();
                               Get.back();
                             },
                             child: const SizedBox(
@@ -203,10 +207,13 @@ class CallPage extends GetView<CallController>{
                                         child: Icon(controller.speaker.value ? Icons.voice_over_off : Icons.record_voice_over_outlined,color: Colors.black87)))
                             ),
                             GestureDetector(
-                              onTap: (){
+                              onTap: ()async{
                                 // globals.socket.emit("cancel",[{
                                 //   "id" : widget.otherProfileData["id"],
                                 // }]);
+                                print('---------------------------------------');
+                                print(controller.currentUuid);
+                                await FlutterCallkitIncoming.endAllCalls();
                                 Get.back();
                               },
                               child: const SizedBox(
@@ -241,10 +248,11 @@ class CallPage extends GetView<CallController>{
                               ),
                             ),
                             GestureDetector(
-                              onTap: (){
+                              onTap: ()async{
                                 // globals.socket.emit("cancel",[{
                                 //   "id" : widget.otherProfileData["id"],
                                 // }]);
+                                await FlutterCallkitIncoming.endAllCalls();
                               },
                               child: const SizedBox(
                                 child: CircleAvatar(

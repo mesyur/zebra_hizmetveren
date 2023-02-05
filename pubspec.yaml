@@ -19,6 +19,8 @@ dependencies:
   flutter_spinkit:
   location: 4.4.0
   lottie:
+  uuid:
+  flutter_callkit_incoming: 1.0.3+3
   custom_pop_up_menu:
   statusbarmanager:
   advanced_icon:
@@ -42,7 +44,7 @@ dependencies:
   proximity_sensor:
   http_parser:
   image_picker:
-  firebase_messaging:
+  firebase_messaging: 14.1.2
   firebase_core:
   geocoding:
   flutter_time_picker_spinner:
