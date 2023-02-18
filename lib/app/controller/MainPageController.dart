@@ -44,6 +44,8 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   late ServicesDetailModel servicesDetailModel;
   bool loadingMap = true;
 
+
+
   routeToCallPage(){
     Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}])?.then((value){
       IncallManager().startRingtone(RingtoneUriType.BUNDLE, 'ios_category', 1);
@@ -67,8 +69,8 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(double.parse(value!.latitude!.toString()), double.parse(value.longitude!.toString()));
       myCurrentLocationForGoToMyLocation = LatLng(double.parse(value.latitude!.toString()), double.parse(value.longitude!.toString()));
-      checkAndNavigationCallingPage();
       hideDialog();
+      checkAndNavigationCallingPage();
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             bearing: 0,
@@ -151,14 +153,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
         case Event.ACTION_CALL_START:
           break;
         case Event.ACTION_CALL_ACCEPT:
-          var calls = await FlutterCallkitIncoming.activeCalls();
-          if (calls is List) {
-            if (calls.isNotEmpty) {
-              Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": calls[0]['id']}]);
-              return calls[0];
-            } else {
-            }
-          }
+          checkAndNavigationCallingPage();
           break;
         case Event.ACTION_CALL_DECLINE:
           break;
@@ -186,39 +181,22 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
 
 
-  ///*********************************************
-  String? _currentUuid;
-  getCurrentCall() async {
-    //check current call from pushkit if possible
+  ///********************* Call Checker ************************
+  checkAndNavigationCallingPage() async {
     var calls = await FlutterCallkitIncoming.activeCalls();
     if (calls is List) {
-      if (calls.isNotEmpty) {
-        print('DATA: $calls');
-        _currentUuid = calls[0]['id'];
-        return calls[0];
-      } else {
-        _currentUuid = "";
-        return null;
-      }
+        calls.isNotEmpty ? Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": calls[0]['id']}]) : null;
     }
   }
 
-  checkAndNavigationCallingPage() async {
-    var currentCall = await getCurrentCall();
-    if (currentCall != null) {
-     // await Future.delayed(const Duration(seconds: 3));
-        Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": _currentUuid}]);
-    }
-  }
-
+  /// On App Resumed
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      //Check call when open app from background
       checkAndNavigationCallingPage();
     }
   }
-  ///*********************************************
+  ///********************* Call Checker ************************
 
 
 
@@ -230,7 +208,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
       goToMyLocation();
     }catch(e){}
     getMyServicesDetail();
-    callBack();
+   // callBack();
     WidgetsBinding.instance.addObserver(this);
   }
 

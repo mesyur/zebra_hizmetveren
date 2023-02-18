@@ -24,8 +24,9 @@ import 'help/translation.dart';
 //flutter pub run flutter_launcher_icons:main
 //flutter pub pub run flutter_native_splash:create
 
-
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(message)async{
+  await Firebase.initializeApp();
   CallSystemModel().showCallkitIncoming(const Uuid().v4());
 }
 
@@ -35,15 +36,7 @@ void main()async{
   WidgetsFlutterBinding.ensureInitialized();
 
   /// Firebase
-  await Firebase.initializeApp();
-  FCM fcm = FCM();
-  fcm.initialize();
-  FirebaseMessaging.instance;
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+  FCM().initialize();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   /// Firebase

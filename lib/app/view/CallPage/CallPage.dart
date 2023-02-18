@@ -202,7 +202,7 @@ class CallPage extends GetView<CallController>{
                                     child: CircleAvatar(
                                         radius: 25.0,
                                         backgroundColor: Colors.white.withOpacity(0.9),
-                                        child: Icon(controller.speaker.value ? Icons.voice_over_off : Icons.record_voice_over_outlined,color: Colors.black87)))
+                                        child: Icon(!controller.speaker.value ? Icons.voice_over_off : Icons.record_voice_over_outlined,color: Colors.black87)))
                             ),
                             GestureDetector(
                               onTap: ()async{
