@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,7 +18,7 @@ import 'help/FCM.dart';
 import 'help/hive/localStorage.dart';
 import 'help/myprovider.dart';
 import 'help/translation.dart';
-
+import 'help/globals.dart' as globals;
 //morad@ASD@123
 //flutter build apk --split-per-abi
 //flutter build appbundle
@@ -27,7 +28,9 @@ import 'help/translation.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(message)async{
   await Firebase.initializeApp();
-  CallSystemModel().showCallkitIncoming(const Uuid().v4());
+  var data = jsonDecode(message.data['callData']);
+  globals.socketChannel = data['socketChannel'];
+  CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
 }
 
 

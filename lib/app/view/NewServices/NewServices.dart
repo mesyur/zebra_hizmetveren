@@ -70,8 +70,9 @@ class NewServices extends GetView<NewServicesController>{
                   },
                   child: Container(
                     height: 55,
-                    width: Get.width / 2 - 30,
+                   // width: Get.width / 2 - 30,
                     margin: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(15),

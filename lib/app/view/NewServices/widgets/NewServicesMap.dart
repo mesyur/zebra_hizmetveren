@@ -93,6 +93,7 @@ class NewServicesMap extends GetView<NewServicesController>{
                 onPressed: () async{
                   controller.myCurrentLocation = controller.moveLatLng;
                   controller.placeMarks = await placemarkFromCoordinates(controller.myCurrentLocation!.latitude, controller.myCurrentLocation!.longitude);
+                  print(controller.placeMarks.first.administrativeArea);
                   controller.showChoseDialog();
                 },
                 child: const Text("Choose the location",textDirection: TextDirection.rtl,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
@@ -123,7 +124,7 @@ class NewServicesMap extends GetView<NewServicesController>{
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       hintText: "Mohalle, sokak veya cadde ara",
-                      hintStyle: const TextStyle(color: Colors.white),
+                      hintStyle: TextStyle(color: Colors.white),
                       fillColor: Colors.black87,
                       contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                       filled: true,

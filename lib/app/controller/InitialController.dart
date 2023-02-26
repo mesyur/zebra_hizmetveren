@@ -1,6 +1,8 @@
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:zebraserviceprovider/help/hive/localStorage.dart';
+import '../../help/location_service.dart';
 import '../Repository/MyServicesApi.dart';
 import '../Repository/UserInfoApi.dart';
 import '../url/url.dart';
@@ -15,7 +17,10 @@ class InitialController extends GetxService{
   RxBool socketConnected = false.obs;
   RxList storyItems = [].obs;
   RxBool authenticated = false.obs;
+  RxBool roomJoined = false.obs;
   StreamSocket streamSocket = StreamSocket();
+  LocationService locationService = LocationService();
+  List<Placemark> placeMarks = [];
 
   initSocket(){
     socket = io(Urls.socket, OptionBuilder().setTransports(['websocket']).setQuery({"id": LocalStorage().getValue('id')}).build());
@@ -37,6 +42,13 @@ class InitialController extends GetxService{
 
 
 
+  joinRoom(){
+    print(placeMarks.first.administrativeArea);
+    roomJoined.value ? null : socket.emit("join",[{
+      "room": placeMarks.first.administrativeArea,
+    }]);
+    roomJoined.value = true;
+  }
 
 
 
@@ -44,6 +56,10 @@ class InitialController extends GetxService{
   void onInit() {
     super.onInit();
     initSocket();
+    locationService.locationStream.listen((e)async{
+      placeMarks = await placemarkFromCoordinates(e.latitude!, e.longitude!);
+      socketConnected.value && placeMarks.isNotEmpty ? joinRoom() : null;
+    });
     authenticated.value = LocalStorage().getValue("login");
     LocalStorage().getValue("login") ? getUser() : null;
   }

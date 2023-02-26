@@ -12,7 +12,7 @@ import '../../help/loadingClass.dart';
 import '../url/url.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import 'package:flutter/foundation.dart' as foundation;
-
+import 'package:zebraserviceprovider/help/globals.dart' as globals;
 
 
 
@@ -59,7 +59,7 @@ class CallController extends GetxController with LoadingDialog{
 
 
   initSocket(){
-    socket = io(Urls.callSocket, OptionBuilder().setTransports(['websocket']).setQuery({"id": socketRoom}).build());
+    socket = io(Urls.callSocket, OptionBuilder().setTransports(['websocket']).setQuery({"id": globals.socketChannel}).build());
     socket.onConnect((_) {socketConnected.value = true;});
     socket.onDisconnect((_) {socketConnected.value = false;});
     socket.on('joined', (data){
@@ -145,7 +145,7 @@ class CallController extends GetxController with LoadingDialog{
   void onInit() {
     super.onInit();
     socketRoom = Get.arguments[0]["socketChannel"];
-    init();
+    socketRoom == '' ? null : init();
   }
 
 

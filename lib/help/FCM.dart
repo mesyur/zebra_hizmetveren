@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:uuid/uuid.dart';
@@ -25,7 +27,9 @@ class FCM{
     });
 
     FirebaseMessaging.onMessage.listen((event) {
-      CallSystemModel().showCallkitIncoming(const Uuid().v4());
+      var data = jsonDecode(event.data['callData']);
+      globals.socketChannel = data['socketChannel'];
+      CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
     });
 
 

@@ -4,7 +4,7 @@ import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 
 class CallSystemModel{
-  Future<void> showCallkitIncoming(String uuid) async {
+  Future<void> showCallkitIncoming(String uuid,socketChannel) async {
     CallKitParams callKitParams = CallKitParams(
       id: uuid,
       nameCaller: 'Hien Nguyen',
@@ -17,7 +17,7 @@ class CallSystemModel{
       textMissedCall: 'Missed call',
       textCallback: 'Call back',
       duration: 30000,
-      extra: <String, dynamic>{'userId': '1a2b3c4d'},
+      extra: <String, dynamic>{'userId': '1a2b3c4d','socketChannel': socketChannel},
       headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
       android: const AndroidParams(
           isCustomNotification: true,

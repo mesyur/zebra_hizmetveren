@@ -213,7 +213,7 @@ class MainPage extends GetView<MainPageController>{
                                           Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}]);
                                         },
                                         onTap: (){
-                                         // Get.toNamed('/NewServices');
+                                          Get.toNamed('/NewServices');
                                         },
                                         child: Row(
                                           children: const [

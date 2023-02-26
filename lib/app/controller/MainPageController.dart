@@ -134,8 +134,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
           "heading": e.heading,
           "busy": false,
           "userData": servicesDetailModel.data,
-        }]
-        ) : null;
+        }]) : null;
       });
     },onError: (e){
       return Future.error("error");
@@ -185,7 +184,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   checkAndNavigationCallingPage() async {
     var calls = await FlutterCallkitIncoming.activeCalls();
     if (calls is List) {
-        calls.isNotEmpty ? Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"},{"id": calls[0]['id']}]) : null;
+        calls.isNotEmpty ? Get.toNamed('/CallPage',arguments: [{"socketChannel": 'xx'},{"id": calls[0]['id']}]) : null;
     }
   }
 
