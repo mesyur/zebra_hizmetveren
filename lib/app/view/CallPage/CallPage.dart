@@ -57,19 +57,19 @@ class CallPage extends GetView<CallController>{
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                            // Text("ÖZEL DERS",textAlign: TextAlign.center,style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w500)),
-                            Text(controller.socketRoom,textAlign: TextAlign.center,style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w500)),
-                            Text("1.17 Km Uzağında",textAlign: TextAlign.center,style: TextStyle(color: Colors.orangeAccent, fontSize: 12.0, fontWeight: FontWeight.w500)),
+                            Text(globals.callerName,textAlign: TextAlign.center,style: const TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w500)),
+                           // Text("1.17 Km Uzağında",textAlign: TextAlign.center,style: TextStyle(color: Colors.orangeAccent, fontSize: 12.0, fontWeight: FontWeight.w500)),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 40),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Text("Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab ",textAlign: TextAlign.left,style: TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w500)),
-                      ),
+                      // const SizedBox(height: 40),
+                      // const Padding(
+                      //   padding: EdgeInsets.symmetric(horizontal: 20),
+                      //   child: Text("Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab Lab ",textAlign: TextAlign.left,style: TextStyle(color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w500)),
+                      // ),
 
 
                       /// Profile Image
@@ -77,59 +77,64 @@ class CallPage extends GetView<CallController>{
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(1),
-                                width: 170,
-                                height: 170,
-                                child: AvatarGlow(
-                                  glowColor: Colors.black12,
-                                  endRadius: 190,
-                                  duration: const Duration(milliseconds: 750),
-                                  repeat: true,
-                                  showTwoGlows: true,
-                                  repeatPauseDuration: const Duration(milliseconds: 50),
-                                  child: Material(
-                                    elevation: 8.0,
-                                    shape: const CircleBorder(),
-                                    child: Container(
-                                      width: 160,
-                                      height: 160,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        image: DecorationImage(
-                                          image: NetworkImage(globals.profilePhoto),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: const BorderRadius.all(Radius.circular(100.0)),
-                                        border: Border.all(
-                                          color: const Color(0xff000000),
-                                          //width: 80,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        children: const [
+                          Image(image: AssetImage('assets/app/logo.png'),height: 30),
                         ],
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: [
+                      //     Stack(
+                      //       alignment: Alignment.center,
+                      //       children: <Widget>[
+                      //         Container(
+                      //           padding: const EdgeInsets.all(1),
+                      //           width: 170,
+                      //           height: 170,
+                      //           child: AvatarGlow(
+                      //             glowColor: Colors.black12,
+                      //             endRadius: 190,
+                      //             duration: const Duration(milliseconds: 750),
+                      //             repeat: true,
+                      //             showTwoGlows: true,
+                      //             repeatPauseDuration: const Duration(milliseconds: 50),
+                      //             child: Material(
+                      //               elevation: 8.0,
+                      //               shape: const CircleBorder(),
+                      //               child: Container(
+                      //                 width: 160,
+                      //                 height: 160,
+                      //                 decoration: BoxDecoration(
+                      //                   color: Colors.white,
+                      //                   image: DecorationImage(
+                      //                     image: NetworkImage(globals.profilePhoto),
+                      //                     fit: BoxFit.cover,
+                      //                   ),
+                      //                   borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+                      //                   border: Border.all(
+                      //                     color: const Color(0xff000000),
+                      //                     //width: 80,
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
 
                       /// Name
                       const SizedBox(height: 10),
-                      Text("${LocalStorage().getValue("firstName")} ${LocalStorage().getValue("lastName")}",textAlign: TextAlign.center,style: const TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w500)),
+                   //   Text("${LocalStorage().getValue("firstName")} ${LocalStorage().getValue("lastName")}",textAlign: TextAlign.center,style: const TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w500)),
 
                       /// Timer
                       const SizedBox(height: 0),
                       controller.callAccepted.value ? CustomTimer(
-                        begin: const Duration(seconds: 0),
-                        end: const Duration(hours: 200),
                         controller: controller.timerController,
-                        builder: (time) {
+                        builder: (state,time) {
                           return SizedBox(
                             width: Get.width,
                             child: Row(

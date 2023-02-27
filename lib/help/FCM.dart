@@ -29,6 +29,7 @@ class FCM{
     FirebaseMessaging.onMessage.listen((event) {
       var data = jsonDecode(event.data['callData']);
       globals.socketChannel = data['socketChannel'];
+      globals.callerName = data['callerName'];
       CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
     });
 

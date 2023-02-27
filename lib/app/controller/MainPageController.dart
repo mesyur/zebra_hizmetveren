@@ -133,6 +133,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
           "longitude": e.longitude,
           "heading": e.heading,
           "busy": false,
+          "name": LocalStorage().getValue("firstName") + ' ' + LocalStorage().getValue("lastName"),
           "userData": servicesDetailModel.data,
         }]) : null;
       });

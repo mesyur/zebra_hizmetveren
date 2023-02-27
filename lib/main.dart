@@ -30,6 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(message)async{
   await Firebase.initializeApp();
   var data = jsonDecode(message.data['callData']);
   globals.socketChannel = data['socketChannel'];
+  globals.callerName = data['callerName'];
   CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
 }
 

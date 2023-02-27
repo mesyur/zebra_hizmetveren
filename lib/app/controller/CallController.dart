@@ -19,7 +19,7 @@ import 'package:zebraserviceprovider/help/globals.dart' as globals;
 
 
 
-class CallController extends GetxController with LoadingDialog{
+class CallController extends GetxController with GetSingleTickerProviderStateMixin,LoadingDialog{
 
 
   final localRenderer = RTCVideoRenderer();
@@ -36,7 +36,7 @@ class CallController extends GetxController with LoadingDialog{
   String socketRoom = '';
  // late StreamSubscription<dynamic> _streamSubscription;
   //AudioInput currentInput = const AudioInput("unknow", 0);
-  final CustomTimerController timerController = CustomTimerController();
+  late final CustomTimerController timerController;
   bool isActive = true;
 
 
@@ -78,6 +78,7 @@ class CallController extends GetxController with LoadingDialog{
       data = jsonDecode(data);
       _gotIce(RTCIceCandidate(data['candidate'], data['sdpMid'], data['sdpMLineIndex']));
       await IncallManager().setSpeakerphoneOn(false);
+      timerController.start();
     });
     socket.connect();
   }
@@ -143,6 +144,13 @@ class CallController extends GetxController with LoadingDialog{
 
   @override
   void onInit() {
+    timerController = CustomTimerController(
+        vsync: this,
+        begin: const Duration(seconds: 0),
+        end: const Duration(seconds: 200),
+        initialState: CustomTimerState.reset,
+        interval: CustomTimerInterval.milliseconds
+    );
     super.onInit();
     socketRoom = Get.arguments[0]["socketChannel"];
     socketRoom == '' ? null : init();
@@ -188,7 +196,7 @@ class CallController extends GetxController with LoadingDialog{
 
 
   Future<void> init1() async {
-     timerController.start(disableNotifyListeners: true);
+
     // FlutterAudioManager.setListener(() async {
     //   await _getInput();
     //   update();

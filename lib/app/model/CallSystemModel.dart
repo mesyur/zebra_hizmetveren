@@ -2,15 +2,16 @@ import 'package:flutter_callkit_incoming/entities/android_params.dart';
 import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:zebraserviceprovider/help/globals.dart';
 
 class CallSystemModel{
   Future<void> showCallkitIncoming(String uuid,socketChannel) async {
     CallKitParams callKitParams = CallKitParams(
       id: uuid,
-      nameCaller: 'Hien Nguyen',
+      nameCaller: callerName,
       appName: 'Callkit',
-      avatar: 'https://i.pravatar.cc/100',
-      handle: '0123456789',
+     // avatar: 'https://i.pravatar.cc/100',
+     // handle: '0123456789',
       type: 0,
       textAccept: 'Accept',
       textDecline: 'Decline',
