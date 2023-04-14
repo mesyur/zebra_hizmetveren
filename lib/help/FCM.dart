@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:uuid/uuid.dart';
 import '../app/model/CallSystemModel.dart';
 import '../help/globals.dart' as globals;
+import 'GetStorage.dart';
 
 class FCM{
   Future initialize() async{
@@ -28,6 +29,9 @@ class FCM{
 
     FirebaseMessaging.onMessage.listen((event) {
       var data = jsonDecode(event.data['callData']);
+      print("&*&**&*(**(*&(*&(*&(&*(####");
+      print(data);
+      box.write('Firebase', data);
       globals.socketChannel = data['socketChannel'];
       globals.callerName = data['callerName'];
       CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);

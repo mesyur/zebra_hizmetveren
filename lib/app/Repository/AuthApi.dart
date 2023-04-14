@@ -23,6 +23,8 @@ class AuthApi{
       var response = await dio.request("/auth/login",data: json.encode(formData));
       if(response.statusCode == 200){
         if(response.data["status"]){
+          /// TODO for delete
+          print(response.data);
           return LoginModel.fromJson(response.data);
         }else{
           return Future.error("\nيرجى اعادة المحاولة من جديد");

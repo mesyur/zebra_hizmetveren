@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_for_flutter/google_places_for_flutter.dart';
 import '../../../controller/NewServicesController.dart';
 import '../../WIDGETS/mapPin.dart';
 
@@ -108,37 +110,84 @@ class NewServicesMap extends GetView<NewServicesController>{
 
 
           /// Search Text on map ...
+          // Positioned(
+          //     top: 50,
+          //     child: Material(
+          //       elevation: 5,
+          //       color: Colors.transparent,
+          //       borderRadius: const BorderRadius.all(Radius.circular(10)),
+          //       child: SizedBox(
+          //         width: MediaQuery.of(context).size.width - 20,
+          //         height: 55,
+          //         child: TextField(
+          //           controller: controller.searchController,
+          //           textDirection: TextDirection.ltr,
+          //           textAlign: TextAlign.right,
+          //           style: const TextStyle(color: Colors.white),
+          //           decoration: const InputDecoration(
+          //             hintText: "Mohalle, sokak veya cadde ara",
+          //             hintStyle: TextStyle(color: Colors.white),
+          //             fillColor: Colors.black87,
+          //             contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+          //             filled: true,
+          //             border: OutlineInputBorder(
+          //               borderSide: BorderSide.none,
+          //               borderRadius: BorderRadius.all(Radius.circular(10)),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     )
+          // ),
+
+
+          // Positioned(
+          //     top: 50,
+          //     child: Material(
+          //       elevation: 5,
+          //       color: Colors.transparent,
+          //       borderRadius: const BorderRadius.all(Radius.circular(10)),
+          //       child: SizedBox(
+          //         width: MediaQuery.of(context).size.width - 20,
+          //         height: 55,
+          //         child: GooglePlaceAutoCompleteTextField(
+          //             textEditingController: controller.searchController,
+          //             googleAPIKey: "AIzaSyBuKa6bchf4ndxKEkqQFwOS62CNNCQ06EQ",
+          //             inputDecoration: const InputDecoration(),
+          //             debounceTime: 800,
+          //             countries: const ["ar","tr","en"],
+          //             isLatLngRequired: true,
+          //             getPlaceDetailWithLatLng: (prediction) {
+          //               print("placeDetails ${prediction.lng}");
+          //               print("*--+++*+-**+-+-**-*-*-+-*+-*+-*+*-+*+-*-+*-+*-+-*+-*+-*+-*+*-+-*+-*-+*+-*");
+          //             }, // this callback is called when isLatLngRequired is true
+          //             itmClick: (prediction) {
+          //               print(prediction);
+          //               // controller.text = prediction.description;
+          //               //  controller.selection = TextSelection.fromPosition(TextPosition(offset: prediction.description!.length));
+          //             }
+          //         ),
+          //       ),
+          //     )
+          // ),
+
+
           Positioned(
               top: 50,
-              child: Material(
-                elevation: 5,
-                color: Colors.transparent,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 20,
-                  height: 55,
-                  child: TextField(
-                    controller: controller.searchController,
-                    textDirection: TextDirection.ltr,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: "Mohalle, sokak veya cadde ara",
-                      hintStyle: TextStyle(color: Colors.white),
-                      fillColor: Colors.black87,
-                      contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              child: SearchGooglePlacesWidget(
+                apiKey: 'AIzaSyBuKa6bchf4ndxKEkqQFwOS62CNNCQ06EQ',
+                language: Get.locale!.languageCode.toLowerCase(),
+                location: controller.myCurrentLocation,
+                radius: 30000,
+                onSelected: (Place place) async {
+                  controller.myPlace.value = place.description!;
+                  final geolocation = await place.geolocation;
+                  controller.googleMapController.animateCamera(CameraUpdate.newLatLng(geolocation?.coordinates));
+                  controller.googleMapController.animateCamera(CameraUpdate.newLatLngBounds(geolocation?.bounds, 0));
+                },
+                onSearch: (Place place) {},
+              ),
           ),
-
-
 
 
 
@@ -171,26 +220,26 @@ class NewServicesMap extends GetView<NewServicesController>{
 
 
           /// My Location Btn on map ...
-          Positioned(
-            top: 53.5,
-            left: 5,
-            child: GestureDetector(
-              onTap: (){
-                FocusScope.of(context).unfocus();
-                controller.searchController.text != null ? controller.myCurrentLocationSearch(locationAddress: controller.searchController.text).then((value){
-                }): null;
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16.0 * 0.55),
-                margin: const EdgeInsets.symmetric(horizontal: 16.0 / 2),
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: const Icon(Icons.search,color: Colors.white,),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 53.5,
+          //   left: 5,
+          //   child: GestureDetector(
+          //     onTap: (){
+          //       FocusScope.of(context).unfocus();
+          //       controller.searchController.text != null ? controller.myCurrentLocationSearch(locationAddress: controller.searchController.text).then((value){
+          //       }): null;
+          //     },
+          //     child: Container(
+          //       padding: const EdgeInsets.all(16.0 * 0.55),
+          //       margin: const EdgeInsets.symmetric(horizontal: 16.0 / 2),
+          //       decoration: const BoxDecoration(
+          //         color: Colors.black,
+          //         borderRadius: BorderRadius.all(Radius.circular(10)),
+          //       ),
+          //       child: const Icon(Icons.search,color: Colors.white,),
+          //     ),
+          //   ),
+          // ),
 
 
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropdown_alert/dropdown_alert.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ import 'app/model/CallSystemModel.dart';
 import 'app/routs/appRouts.dart';
 import 'error.dart';
 import 'help/FCM.dart';
+import 'help/GetStorage.dart';
 import 'help/hive/localStorage.dart';
 import 'help/myprovider.dart';
 import 'help/translation.dart';
@@ -31,6 +33,11 @@ Future<void> _firebaseMessagingBackgroundHandler(message)async{
   var data = jsonDecode(message.data['callData']);
   globals.socketChannel = data['socketChannel'];
   globals.callerName = data['callerName'];
+  await GetStorage.init();
+  await box.write('Firebase', data);
+  print('(((***************(((***************(((***************(((***************(((***************');
+  print(box.read('Firebase'));
+  print(globals.socketChannel);
   CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
 }
 
@@ -38,7 +45,7 @@ Future<void> _firebaseMessagingBackgroundHandler(message)async{
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
-
+  await GetStorage.init();
   /// Firebase
   FCM().initialize();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

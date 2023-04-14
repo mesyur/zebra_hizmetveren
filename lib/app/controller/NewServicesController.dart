@@ -72,6 +72,7 @@ class NewServicesController  extends GetxController with StateMixin ,LoadingDial
   late CameraPosition initialLocation;
   late LatLng moveLatLng;
   List<Placemark> placeMarks = [];
+  RxString myPlace = ''.obs;
 
 
   /// on create => onCreate

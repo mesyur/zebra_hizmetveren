@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../bindings/BillingInformationBindings.dart';
 import '../bindings/CallBinding.dart';
 import '../bindings/CallHoursBinding.dart';
+import '../bindings/ChatBinding.dart';
 import '../bindings/ContactUsBinding.dart';
 import '../bindings/EditeMyServicesPageBinding.dart';
 import '../bindings/HelpBinding.dart';
@@ -24,6 +25,7 @@ import '../view/Auth/Register/Register.dart';
 import '../view/BillingInformation/BillingInformation.dart';
 import '../view/CallHours/CallHours.dart';
 import '../view/CallPage/CallPage.dart';
+import '../view/Chat/ChatPage.dart';
 import '../view/EditeMyServicesPage/EditeMyServicesPage.dart';
 import '../view/Help/Help.dart';
 import '../view/Help/HelpPages/ContactUs/ContactUs.dart';
@@ -159,6 +161,12 @@ appRoutes() => [
   GetPage(
       name: '/FavoriteUsers',
       page: () => const FavoriteUsers(),
+      transitionDuration: const Duration(milliseconds: 0)
+  ),
+  GetPage(
+      name: '/ChatPage',
+      page: () => const ChatPage(),
+      binding: ChatBinding(),
       transitionDuration: const Duration(milliseconds: 0)
   ),
 ];

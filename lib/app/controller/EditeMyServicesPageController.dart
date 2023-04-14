@@ -55,7 +55,7 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
   late LatLng moveLatLng;
   List<Placemark> placeMarks = [];
   LatLng locationStream = const LatLng(0.0,0.0);
-
+  RxString myPlace = ''.obs;
 
 
   ///***************************** Map

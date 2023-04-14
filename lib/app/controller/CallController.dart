@@ -8,6 +8,7 @@ import 'package:flutter_incall_manager/flutter_incall_manager.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import '../../help/GetStorage.dart';
 import '../../help/loadingClass.dart';
 import '../url/url.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
@@ -59,7 +60,7 @@ class CallController extends GetxController with GetSingleTickerProviderStateMix
 
 
   initSocket(){
-    socket = io(Urls.callSocket, OptionBuilder().setTransports(['websocket']).setQuery({"id": globals.socketChannel}).build());
+    socket = io(Urls.callSocket, OptionBuilder().enableForceNewConnection().setTransports(['websocket']).setQuery({"id": box.read('Firebase')['socketChannel']}).build());
     socket.onConnect((_) {socketConnected.value = true;});
     socket.onDisconnect((_) {socketConnected.value = false;});
     socket.on('joined', (data){
@@ -161,6 +162,7 @@ class CallController extends GetxController with GetSingleTickerProviderStateMix
 
   @override
   void onClose() {
+    globals.callOpen = false;
     if(socketConnected.value){
       socket.disconnect();
       socket.destroy();

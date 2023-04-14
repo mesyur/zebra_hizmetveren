@@ -1,11 +1,17 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_incall_manager/flutter_incall_manager.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart' as lot;
 import 'package:zebraserviceprovider/help/location_service.dart';
+import '../../help/GetStorage.dart';
 import '../../help/chatStream.dart';
 import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
@@ -14,9 +20,12 @@ import '../model/CategoryModel.dart';
 import '../model/ServicesDetailModel.dart';
 import '../model/SubCategory2Model.dart';
 import '../model/SubCategoryModel.dart';
+import '../view/Help/CallLeft.dart';
 import '../view/WIDGETS/mapPin.dart';
 import 'InitialController.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:zebraserviceprovider/help/globals.dart' as globals;
+
 
 class MyState<T1,T2,T3>{
   T1? item1;
@@ -41,16 +50,11 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   late LatLng myCurrentLocationForGoToMyLocation;
   BitmapDescriptor pinLocationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor pinLocationIcon1 = BitmapDescriptor.defaultMarker;
-  late ServicesDetailModel servicesDetailModel;
+ // late ServicesDetailModel servicesDetailModel;
   bool loadingMap = true;
 
 
 
-  routeToCallPage(){
-    Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}])?.then((value){
-      IncallManager().startRingtone(RingtoneUriType.BUNDLE, 'ios_category', 1);
-    });
-  }
 
 
 
@@ -65,11 +69,11 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
   onCreate(GoogleMapController onCreateController)async{
     googleMapController = onCreateController;
-    showDialogBox();
+   // showDialogBox();
     await locationService.getLocation().then((value){
       myCurrentLocation = LatLng(double.parse(value!.latitude!.toString()), double.parse(value.longitude!.toString()));
       myCurrentLocationForGoToMyLocation = LatLng(double.parse(value.latitude!.toString()), double.parse(value.longitude!.toString()));
-      hideDialog();
+     // hideDialog();
       checkAndNavigationCallingPage();
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -122,19 +126,18 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
   getMyServicesDetail(){
     MyServicesApi().getMyServicesDetailApi().then((value){
-      servicesDetailModel = value;
       locationService.locationStream.listen((e){
         myCurrentLocationForGoToMyLocation = LatLng(e.latitude!,e.longitude!);
         initialController.socketConnected.value ? initialController.socket.emit("marker",[{
-          "taxiUserId": servicesDetailModel.data[0].userId,
-          "taxiUserName": servicesDetailModel.data[0].categoryName,
-          "taxiTypeId": servicesDetailModel.data[0].id,
+          "taxiUserId": value.data[0].userId,
+          "taxiUserName": value.data[0].categoryName,
+          "taxiTypeId": value.data[0].id,
           "latitude": e.latitude,
           "longitude": e.longitude,
           "heading": e.heading,
           "busy": false,
           "name": LocalStorage().getValue("firstName") + ' ' + LocalStorage().getValue("lastName"),
-          "userData": servicesDetailModel.data,
+          "userData": value.data,
         }]) : null;
       });
     },onError: (e){
@@ -180,12 +183,18 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   }
 
 
+  var callsx;
 
   ///********************* Call Checker ************************
   checkAndNavigationCallingPage() async {
     var calls = await FlutterCallkitIncoming.activeCalls();
     if (calls is List) {
-        calls.isNotEmpty ? Get.toNamed('/CallPage',arguments: [{"socketChannel": 'xx'},{"id": calls[0]['id']}]) : null;
+      callsx = calls;
+      callsx.isNotEmpty ? initialController.socket.emit('callAccepted',[{
+        "id": box.read('Firebase')['callerId'],
+        "name": "Murad",
+        "socketChannelRandom": box.read('Firebase')['socketChannel']
+      }]) : null;
     }
   }
 
@@ -201,6 +210,93 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
 
 
+
+  showChoseDialog({userData}){
+    Get.dialog(
+      barrierDismissible: false,
+      useSafeArea: false,
+      WillPopScope(
+        onWillPop: ()async => false,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+              builder: (BuildContext _, StateSetter setState) {
+                return Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: lot.Lottie.asset('assets/icons/request.json',height: 250),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        Text('${userData['user']['firstName']}',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+
+
+
+                        const SizedBox(height: 5),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Center(child: Text('Temizlik hizmeti verebilir misiniz lütfen ?')),
+                        ),
+
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                          ),
+                          onPressed: ()async{
+                            await FlutterRingtonePlayer.stop();
+                            Get.back();
+                          },
+                          child: const Text("Evet, Yapabilirim",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                        ),
+
+
+
+                        const SizedBox(height: 20),
+                        GestureDetector(
+                            onTap: ()async{
+                              await FlutterRingtonePlayer.stop();
+                              Get.back();
+                            },
+                            child: const Text("Hayır, şu anda sana yardımcı olamam !",style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold))),
+                        const SizedBox(height: 20),
+
+
+
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
   @override
   void onReady() {
     super.onReady();
@@ -208,8 +304,33 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
       goToMyLocation();
     }catch(e){}
     getMyServicesDetail();
-   // callBack();
-    WidgetsBinding.instance.addObserver(this);
+    callBack();
+  //  WidgetsBinding.instance.addObserver(this);
+    initialController.socket.on('inCall', (data)async{
+      if(data['data']['type'] == 'In Call'){
+        await FlutterCallkitIncoming.endAllCalls();
+       // globals.callOpen ? null : AlertController.show("Call", 'In Call', TypeAlert.warning);
+        globals.callOpen ? null : Get.to(CallLeft(image: 'assets/icons/crying.png',category: box.read('Firebase')['catName'],subCategory: box.read('Firebase')['subCatName'],name: box.read('Firebase')['callerName'],text: 'cagri yi kacirdin'));
+      }else if(data['data']['type'] == 'No Have Call'){
+        await FlutterCallkitIncoming.endAllCalls();
+        //AlertController.show("Call", 'No Have Call', TypeAlert.error);
+        Get.to(CallLeft(image: 'assets/icons/xCall.png',category: box.read('Firebase')['catName'],subCategory: box.read('Firebase')['subCatName'],name: box.read('Firebase')['callerName'],text: 'Bağlantı müşteri tarafından kesildi',));
+      }else{
+        globals.callOpen = true;
+        callsx.isNotEmpty ? Get.toNamed('/CallPage',arguments: [{"socketChannel": box.read('Firebase')['socketChannel']},{"id": callsx[0]['id']}]) : null;
+      }
+    });
+
+
+    initialController.socket.on('newTeklif', (data)async{
+      showChoseDialog(userData: data['data']['userData']);
+      await FlutterRingtonePlayer.play(fromAsset: "assets/newRequest.mp3", looping: true, asAlarm: false,volume: 10);
+    });
+
+
+    /// TODO DELETE ON PRODUCTION
+    print(LocalStorage().getValue("id"));
+    print(LocalStorage().getValue("token"));
   }
 
 

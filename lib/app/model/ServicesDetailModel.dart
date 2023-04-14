@@ -44,7 +44,7 @@ class Data {
   late final double? lng;
   late final int liveLocation;
   late final int isOfficial;
-  late final String images;
+  late final List images;
   late final String createdDate;
   late final String categoryName;
   late final String? slug;
@@ -62,7 +62,7 @@ class Data {
     images = json['images'];
     createdDate = json['createdDate'];
     categoryName = json['categoryName'];
-    slug = null;
+    slug = json['slug'];
   }
 
   Map<String, dynamic> toJson() {

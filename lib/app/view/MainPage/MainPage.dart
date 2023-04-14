@@ -208,10 +208,6 @@ class MainPage extends GetView<MainPageController>{
                                       ),
                                       const SizedBox(height: 20),
                                       GestureDetector(
-                                        onLongPress: (){
-                                          /// ToDo Delete onLongPress
-                                          Get.toNamed('/CallPage',arguments: [{"socketChannel": "channel1"}]);
-                                        },
                                         onTap: (){
                                           Get.toNamed('/NewServices');
                                         },
@@ -220,6 +216,19 @@ class MainPage extends GetView<MainPageController>{
                                             Icon(Icons.add),
                                             SizedBox(width: 10),
                                             Text("Hizmet Ekle",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      GestureDetector(
+                                        onTap: (){
+                                          Get.toNamed('/ChatPage',arguments: 1);
+                                        },
+                                        child: Row(
+                                          children: const [
+                                            Icon(Icons.add),
+                                            SizedBox(width: 10),
+                                            Text("Chat",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
                                           ],
                                         ),
                                       ),

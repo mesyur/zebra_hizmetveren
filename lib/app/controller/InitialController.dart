@@ -43,7 +43,7 @@ class InitialController extends GetxService{
 
 
   joinRoom(){
-    print(placeMarks.first.administrativeArea);
+    //print(placeMarks.first.administrativeArea);
     roomJoined.value ? null : socket.emit("join",[{
       "room": placeMarks.first.administrativeArea,
     }]);

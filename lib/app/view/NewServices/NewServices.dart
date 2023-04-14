@@ -408,7 +408,19 @@ class NewServices extends GetView<NewServicesController>{
             ),
 
 
-
+            controller.myPlace.value == '' ? Container() : const SizedBox(height: 10),
+            Obx(() => controller.myPlace.value == '' ? Container() : SizedBox(
+              width: Get.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(controller.myPlace.value)),
+                ],
+              ),
+            )),
 
 
             /// RealTime Location
@@ -418,7 +430,7 @@ class NewServices extends GetView<NewServicesController>{
               child: GestureDetector(
                 onTap: (){
                   controller.selectedRealTimeLocation.value = !controller.selectedRealTimeLocation.value;
-                  controller.myCurrentLocation = const LatLng(0.0, 0.0);
+                 // controller.myCurrentLocation = const LatLng(0.0, 0.0);
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
