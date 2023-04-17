@@ -28,13 +28,13 @@ class FCM{
     });
 
     FirebaseMessaging.onMessage.listen((event) {
-      var data = jsonDecode(event.data['callData']);
-      print("&*&**&*(**(*&(*&(*&(&*(####");
-      print(data);
-      box.write('Firebase', data);
-      globals.socketChannel = data['socketChannel'];
-      globals.callerName = data['callerName'];
-      CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
+      if(!globals.callOpen){
+        var data = jsonDecode(event.data['callData']);
+        box.write('Firebase', data);
+        globals.socketChannel = data['socketChannel'];
+        globals.callerName = data['callerName'];
+        CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
+      }
     });
 
 

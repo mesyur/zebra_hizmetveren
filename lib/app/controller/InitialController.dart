@@ -21,6 +21,8 @@ class InitialController extends GetxService{
   StreamSocket streamSocket = StreamSocket();
   LocationService locationService = LocationService();
   List<Placemark> placeMarks = [];
+  var userData;
+
 
   initSocket(){
     socket = io(Urls.socket, OptionBuilder().setTransports(['websocket']).setQuery({"id": LocalStorage().getValue('id')}).build());
@@ -36,7 +38,9 @@ class InitialController extends GetxService{
       if(value.data.user.isActive == 0){
         LocalStorage().setValue("login",false);
         Get.offAllNamed("/Login");
-      }else{}
+      }else{
+        userData = value.data.user;
+      }
     },onError: (e){});
   }
 

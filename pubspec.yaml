@@ -57,6 +57,7 @@ dependencies:
   socket_io_client:  2.0.1
   get_storage:
   flutter_ringtone_player:
+  widget_circular_animator:
   flutter_chat_ui: 1.6.6
 
 flutter_icons:

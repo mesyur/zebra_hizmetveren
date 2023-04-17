@@ -29,16 +29,15 @@ import 'help/globals.dart' as globals;
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(message)async{
-  await Firebase.initializeApp();
-  var data = jsonDecode(message.data['callData']);
-  globals.socketChannel = data['socketChannel'];
-  globals.callerName = data['callerName'];
-  await GetStorage.init();
-  await box.write('Firebase', data);
-  print('(((***************(((***************(((***************(((***************(((***************');
-  print(box.read('Firebase'));
-  print(globals.socketChannel);
-  CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
+  if(!globals.callOpen){
+    await Firebase.initializeApp();
+    var data = jsonDecode(message.data['callData']);
+    globals.socketChannel = data['socketChannel'];
+    globals.callerName = data['callerName'];
+    await GetStorage.init();
+    await box.write('Firebase', data);
+    CallSystemModel().showCallkitIncoming(const Uuid().v4(),data['socketChannel']);
+  }else{}
 }
 
 

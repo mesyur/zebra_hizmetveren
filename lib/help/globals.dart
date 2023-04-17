@@ -13,6 +13,7 @@ var cityId;
 var whatsApp = "+905454880902";
 var globalPhoneNumberForPin = '';
 var socketChannel = '';
+var offerIsOpen = false;
 var callerName = '';
 bool callOpen = false;
 var profilePhoto = 'https://image.shutterstock.com/mosaic_250/2780032/1936610998/stock-photo-close-up-headshot-portrait-of-smiling-s-caucasian-man-look-at-camera-posing-in-own-flat-or-1936610998.jpg';

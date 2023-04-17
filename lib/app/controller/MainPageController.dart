@@ -21,6 +21,7 @@ import '../model/ServicesDetailModel.dart';
 import '../model/SubCategory2Model.dart';
 import '../model/SubCategoryModel.dart';
 import '../view/Help/CallLeft.dart';
+import '../view/MainPage/Widgets/TimerWidget.dart';
 import '../view/WIDGETS/mapPin.dart';
 import 'InitialController.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -208,10 +209,17 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   ///********************* Call Checker ************************
 
 
+  closeDialog()async{
+    globals.offerIsOpen ? Get.back() : null;
+    globals.offerIsOpen ? await FlutterRingtonePlayer.stop() : null;
+    globals.offerIsOpen = false;
+  }
 
 
 
-  showChoseDialog({userData}){
+  showChoseDialog({userData})async{
+    globals.offerIsOpen = true;
+    await FlutterRingtonePlayer.play(fromAsset: "assets/newRequest.mp3", looping: true, asAlarm: false,volume: 10);
     Get.dialog(
       barrierDismissible: false,
       useSafeArea: false,
@@ -223,66 +231,84 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
               builder: (BuildContext _, StateSetter setState) {
                 return Center(
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+                   // margin: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-
-
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: lot.Lottie.asset('assets/icons/request.json',height: 250),
-                        ),
-
-
-
-                        const SizedBox(height: 20),
-                        Text('${userData['user']['firstName']}',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
-
-
-
-                        const SizedBox(height: 5),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Center(child: Text('Temizlik hizmeti verebilir misiniz lütfen ?')),
-                        ),
-
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: Get.width,
+                            child: Stack(
+                              children: [
+                                lot.Lottie.asset('assets/icons/request.json',height: 150),
+                                const Positioned(
+                                    top: 5,
+                                    right: 5,
+                                    child: TimerWidget())
+                              ],
                             ),
                           ),
-                          onPressed: ()async{
-                            await FlutterRingtonePlayer.stop();
-                            Get.back();
-                          },
-                          child: const Text("Evet, Yapabilirim",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
-                        ),
-
-
-
-                        const SizedBox(height: 20),
-                        GestureDetector(
-                            onTap: ()async{
-                              await FlutterRingtonePlayer.stop();
-                              Get.back();
-                            },
-                            child: const Text("Hayır, şu anda sana yardımcı olamam !",style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold))),
-                        const SizedBox(height: 20),
-
-
-
-                      ],
+                          const SizedBox(height: 20),
+                          Center(child: Text('${userData['userData']['user']['firstName']} ${userData['userData']['user']['lastName']}',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
+                          const Divider(),
+                          Text('Price : ₺${userData['price']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,fontFamily: 'Montserrat')),
+                          const Divider(),
+                          Text('Hour : ${userData['cleanTimeText']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          Text('Day : ${userData['selectedDay']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          Text('Time : ${userData['t2']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          Text('Note : ${userData['noteText']}',style: const TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                ),
+                              ),
+                              onPressed: ()async{
+                                globals.offerIsOpen = false;
+                                await FlutterRingtonePlayer.stop();
+                                initialController.socket.emit('acceptOffer',[{
+                                  'id': userData['userData']['user']['id'],
+                                  'price': userData['price'],
+                                  'homeRomsText': userData['homeRomsText'],
+                                  'cleanTimeText': userData['cleanTimeText'],
+                                  'selectedDay': userData['selectedDay'],
+                                  't2': userData['t2'],
+                                  'currentUuid': userData['currentUuid'],
+                                  'userData': initialController.userData,
+                                }]);
+                                Get.back();
+                              },
+                              child: const Text("+ kabul et",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: GestureDetector(
+                                onTap: ()async{
+                                  globals.offerIsOpen = false;
+                                  await FlutterRingtonePlayer.stop();
+                                  Get.back();
+                                },
+                                child: const Text("Hayır, şu anda sana yardımcı olamam !",style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold))),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -322,9 +348,8 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     });
 
 
-    initialController.socket.on('newTeklif', (data)async{
-      showChoseDialog(userData: data['data']['userData']);
-      await FlutterRingtonePlayer.play(fromAsset: "assets/newRequest.mp3", looping: true, asAlarm: false,volume: 10);
+    initialController.socket.on('newOffer', (data)async{
+      globals.offerIsOpen ? null : showChoseDialog(userData: data['data']);
     });
 
 
