@@ -411,7 +411,24 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
         startPriceOrg.value = data['data']['price'];
         startPrice.value = data['data']['price'];
         showChoseDialog(userData: data['data']);
+      }else{
+        Get.back();
+        globals.offerIsOpen = false;
+        increaseDecreasePrice = data['data']['increaseDecreasePrice'];
+        startPriceOrg.value = data['data']['price'];
+        startPrice.value = data['data']['price'];
+        showChoseDialog(userData: data['data']);
       }
+    });
+
+
+    initialController.socket.on('offerCanceled', (data)async{
+      if(globals.offerIsOpen){
+        globals.offerIsOpen = false;
+        await FlutterRingtonePlayer.stop();
+        Get.back();
+      }
+      AlertController.show("Offer", "Offer Canceled !", TypeAlert.warning);
     });
 
 
