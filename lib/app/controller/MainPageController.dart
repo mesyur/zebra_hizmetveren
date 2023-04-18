@@ -51,7 +51,9 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   late LatLng myCurrentLocationForGoToMyLocation;
   BitmapDescriptor pinLocationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor pinLocationIcon1 = BitmapDescriptor.defaultMarker;
- // late ServicesDetailModel servicesDetailModel;
+  RxInt startPriceOrg = 0.obs;
+  RxInt startPrice = 0.obs;
+  int increaseDecreasePrice = 0;
   bool loadingMap = true;
 
 
@@ -213,6 +215,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     globals.offerIsOpen ? Get.back() : null;
     globals.offerIsOpen ? await FlutterRingtonePlayer.stop() : null;
     globals.offerIsOpen = false;
+    await FlutterRingtonePlayer.play(fromAsset: "assets/delete.mp3", looping: false, asAlarm: false,volume: 10);
   }
 
 
@@ -269,6 +272,60 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                           const SizedBox(height: 10),
                           Text('Note : ${userData['noteText']}',style: const TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold)),
                           const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    width: 55,
+                                    height: 35,
+                                    child: MaterialButton(
+                                      elevation: 0,
+                                      onPressed: startPrice.value == startPriceOrg.value ? null : (){
+                                        startPrice -= increaseDecreasePrice;
+                                      },
+                                      color: Colors.black,
+                                      shape: const RoundedRectangleBorder(
+                                          side: BorderSide(color: Colors.black12),
+                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 0),
+                                        child: Text('- $increaseDecreasePrice', style: TextStyle(color: startPrice.value == startPriceOrg.value ? Colors.black26 : Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Obx(() => Text('₺$startPrice', style: const TextStyle(color: Colors.black87, fontSize: 20.0, fontWeight: FontWeight.bold,fontFamily: 'Montserrat'))),
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    width: 55,
+                                    height: 35,
+                                    child: MaterialButton(
+                                      elevation: 0,
+                                      onPressed: (){
+                                        startPrice += increaseDecreasePrice;
+                                      },
+                                      color: Colors.black,
+                                      shape: const RoundedRectangleBorder(
+                                          side: BorderSide(color: Colors.black12),
+                                          borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 0),
+                                        child: Text('+ $increaseDecreasePrice', style: const TextStyle(color: Colors.white, fontSize: 12.0, fontWeight: FontWeight.bold),),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -283,7 +340,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                                 await FlutterRingtonePlayer.stop();
                                 initialController.socket.emit('acceptOffer',[{
                                   'id': userData['userData']['user']['id'],
-                                  'price': userData['price'],
+                                  'price': startPrice.value,
                                   'homeRomsText': userData['homeRomsText'],
                                   'cleanTimeText': userData['cleanTimeText'],
                                   'selectedDay': userData['selectedDay'],
@@ -349,7 +406,12 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
 
     initialController.socket.on('newOffer', (data)async{
-      globals.offerIsOpen ? null : showChoseDialog(userData: data['data']);
+      if(!globals.offerIsOpen){
+        increaseDecreasePrice = data['data']['increaseDecreasePrice'];
+        startPriceOrg.value = data['data']['price'];
+        startPrice.value = data['data']['price'];
+        showChoseDialog(userData: data['data']);
+      }
     });
 
 

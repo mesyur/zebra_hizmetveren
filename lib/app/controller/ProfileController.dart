@@ -19,10 +19,13 @@ import '../model/UserInfoModel.dart';
 import '../model/UserUpdateModel.dart';
 import '../model/countryCodes.dart';
 import '../../help/globals.dart' as globals;
+import 'InitialController.dart';
 
 
 
 class ProfileController extends GetxController with StateMixin<UserInfoModel> ,LoadingDialog{
+
+  InitialController initialController = Get.find();
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
@@ -106,6 +109,14 @@ class ProfileController extends GetxController with StateMixin<UserInfoModel> ,L
           hideDialog();
           AlertController.show("Update Account", "Profil bilgileri başarıyla değiştirildi", TypeAlert.success);
           Get.back();
+          UserInfoApi().getUserInfo().then((value){
+            if(value.data.user.isActive == 0){
+              LocalStorage().setValue("login",false);
+              Get.offAllNamed("/Login");
+            }else{
+              initialController.userData = value.data.user;
+            }
+          },onError: (e){});
         },onError: (e){
           hideDialog();
         });

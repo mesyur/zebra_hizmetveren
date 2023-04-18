@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 import 'dart:math' as math;
@@ -34,7 +35,7 @@ class _TimerWidgetState extends State<TimerWidget> with SingleTickerProviderStat
     animationController.stop();
     animationController.reset();
     animationController.reverse(from: animationController.value == 0.0 ? 1.0 : animationController.value);
-    animationController.addListener(() {
+    animationController.addListener(()async{
       if(animationController.isDismissed && animationController.value == 0.0){
         initialController.closeDialog();
       }
