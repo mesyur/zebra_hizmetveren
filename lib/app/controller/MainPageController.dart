@@ -17,6 +17,7 @@ import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
 import '../Repository/MyServicesApi.dart';
 import '../model/CategoryModel.dart';
+import '../model/OpenConversionModel.dart';
 import '../model/ServicesDetailModel.dart';
 import '../model/SubCategory2Model.dart';
 import '../model/SubCategoryModel.dart';
@@ -55,7 +56,8 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   RxInt startPrice = 0.obs;
   int increaseDecreasePrice = 0;
   bool loadingMap = true;
-
+  RxBool conversionClosed = false.obs;
+  late OpenConversionModel oCM;
 
 
 
@@ -380,6 +382,141 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
 
 
+  showChoseDialogForOffer({OpenConversionModel? dialogOCM})async{
+    globals.conversionOpen = true;
+    await FlutterRingtonePlayer.play(fromAsset: "assets/connected.mp3", looping: false, asAlarm: false,volume: 10);
+    Get.dialog(
+      barrierDismissible: false,
+      useSafeArea: false,
+      WillPopScope(
+        onWillPop: ()async => false,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.zero,
+          child: StatefulBuilder(
+              builder: (BuildContext _, StateSetter setState) {
+                return Center(
+                  child: Container(
+                    width: Get.width,
+                    height: Get.height,
+                    decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(0))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Center(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black,
+                                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                      ),
+                                    ),
+                                    onPressed: ()async{
+                                      globals.conversionOpen = false;
+                                      conversionClosed.value = false;
+                                      initialController.socket.emit("closedConversion",[{
+                                        'id': dialogOCM?.data.zebraUserData.user.id
+                                      }]);
+                                      Get.back();
+                                    },
+                                    child: const Text("Close",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Obx(() => conversionClosed.value ? Center(
+                            child: Card(
+                              surfaceTintColor: Colors.white,
+                              child: SizedBox(
+                                height: 120,
+                                width: Get.width - 150,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 75,
+                                      //width: 50,
+                                      child: lot.Lottie.asset(
+                                        'assets/icons/warning.json',
+                                        height: 75,
+                                        animate: true,
+                                        repeat: true,
+                                      ),
+                                    ),
+                                    const Text("User Closed Conversion ..!",style: TextStyle(color: Colors.redAccent,fontSize: 15,fontWeight: FontWeight.bold,fontFamily: 'Montserrat')),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ) : SizedBox(
+                            width: Get.width,
+                            child: lot.Lottie.asset('assets/icons/servicesX.json',height: 150),
+                          )),
+                          const SizedBox(height: 20),
+                          Center(child: Text('${dialogOCM?.data.zebraUserData.user.firstName} ${dialogOCM?.data.zebraUserData.user.lastName}',style: const TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold))),
+                          const Divider(),
+                          Text('Price : ₺${dialogOCM?.data.price}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,fontFamily: 'Montserrat')),
+                          const Divider(),
+                          Text('Hour : ${dialogOCM?.data.cleanTimeText}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          Text('Day : ${dialogOCM?.data.selectedDay}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          Text('Time : ${dialogOCM?.data.t2}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const Divider(),
+                          const SizedBox(height: 10),
+                          Text('Note : ${dialogOCM?.data.noteController}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                  ),
+                                  onPressed: ()async{
+                                    Get.toNamed('/ChatPage',arguments: dialogOCM?.data.zebraUserData.user.id);
+                                  },
+                                  child: const Text("mesajlaşma",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
+
+
   @override
   void onReady() {
     super.onReady();
@@ -406,18 +543,20 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
 
     initialController.socket.on('newOffer', (data)async{
-      if(!globals.offerIsOpen){
-        increaseDecreasePrice = data['data']['increaseDecreasePrice'];
-        startPriceOrg.value = data['data']['price'];
-        startPrice.value = data['data']['price'];
-        showChoseDialog(userData: data['data']);
-      }else{
-        Get.back();
-        globals.offerIsOpen = false;
-        increaseDecreasePrice = data['data']['increaseDecreasePrice'];
-        startPriceOrg.value = data['data']['price'];
-        startPrice.value = data['data']['price'];
-        showChoseDialog(userData: data['data']);
+      if(!globals.conversionOpen){
+        if(!globals.offerIsOpen){
+          increaseDecreasePrice = data['data']['increaseDecreasePrice'];
+          startPriceOrg.value = data['data']['price'];
+          startPrice.value = data['data']['price'];
+          showChoseDialog(userData: data['data']);
+        }else{
+          Get.back();
+          globals.offerIsOpen = false;
+          increaseDecreasePrice = data['data']['increaseDecreasePrice'];
+          startPriceOrg.value = data['data']['price'];
+          startPrice.value = data['data']['price'];
+          showChoseDialog(userData: data['data']);
+        }
       }
     });
 
@@ -427,8 +566,26 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
         globals.offerIsOpen = false;
         await FlutterRingtonePlayer.stop();
         Get.back();
+      }else if(globals.conversionOpen){
+        Get.back();
+        globals.conversionOpen = false;
       }
       AlertController.show("Offer", "Offer Canceled !", TypeAlert.warning);
+    });
+
+    initialController.socket.on('openConversion', (data)async{
+      if(!globals.offerIsOpen){
+        oCM = OpenConversionModel.fromJson(data);
+        showChoseDialogForOffer(dialogOCM: oCM);
+      }
+    });
+
+
+    initialController.socket.on('closedConversion', (data)async{
+      if(globals.conversionOpen){
+        conversionClosed.value = true;
+        await FlutterRingtonePlayer.play(fromAsset: "assets/close.mp3", looping: false, asAlarm: false,volume: 10);
+      }
     });
 
 
