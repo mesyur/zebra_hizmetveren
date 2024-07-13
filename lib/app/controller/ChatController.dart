@@ -3,18 +3,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:uuid/uuid.dart';
+import 'package:zebraserviceprovider/app/Repository/ChatApi.dart';
 import 'package:zebraserviceprovider/help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
+import '../model/ChatMessagesModel.dart';
+import '../model/Global.dart';
 import 'InitialController.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 
 class ChatController extends GetxController with LoadingDialog{
 
-
+  Rxn<ChatMessagesModel> chatMessagesModel = Rxn<ChatMessagesModel>();
   InitialController initialController = Get.find();
   RxList messages = [].obs;
+  RxString chatId = ''.obs;
   late TextEditingController addMsgController;
   RxString addMsgControllerText = ''.obs;
   List staticChat = [
@@ -51,15 +56,46 @@ class ChatController extends GetxController with LoadingDialog{
   }
 
 
+
+  getMessage(){
+    chatId.value == '0' ? null : showDialogBox();
+    chatId.value == '0' ? null : ChatApi().getMessage(data: jsonEncode({
+      "chatId": chatId.value
+    })).then((value){
+      chatMessagesModel.value = value;
+      for(var i in value.data){
+        final textMessage = types.TextMessage(
+          author: types.User(
+              id: i.author.id.toString(),
+              firstName: i.author.firstName,
+              lastName: i.author.lastName,
+              imageUrl: 'https://i.ibb.co/jWh4nty/appLogo.png',
+              createdAt: 1720363983021
+          ),
+          createdAt: int.tryParse(i.createdAt),
+          id: i.id.toString(),
+          text: i.text,
+        );
+        messages.insert(0, textMessage);
+      }
+      Get.back();
+    },onError: (e){
+      Get.back();
+    });
+  }
+
+
   @override
   void onInit() {
     addMsgController = TextEditingController();
+    chatId.value = Get.arguments[1].toString();
     super.onInit();
   }
 
   @override
   void onClose() {
     addMsgController.dispose();
+    Global.otherUserGlobalIdForChat.value = 0;
     super.onClose();
   }
 
@@ -82,6 +118,7 @@ class ChatController extends GetxController with LoadingDialog{
       );
       messages.insert(0, textMessage);
     });
+    getMessage();
   }
 
 

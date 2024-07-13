@@ -97,6 +97,8 @@ class LoginController extends GetxController with StateMixin ,LoadingDialog{
       AuthApi().loginApi(phone: dialCodeMyIso+phoneNumberController.text).then((value){
         hideDialog();
         if(value.data.page == "pin"){
+          print(value.data.user!.pin);
+          print('--------------------------------');
           Get.toNamed('/Pin',arguments: [{"userId": value.data.user?.id},{"from": "login"}]);
         }else{
           Get.toNamed('/Register');

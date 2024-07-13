@@ -21,12 +21,10 @@ class Sss extends GetView<SssController>{
           return ExpandedTile(
             theme: const ExpandedTileThemeData(
               headerColor: Colors.white,
-              headerRadius: 0.0,
               headerPadding: EdgeInsets.all(10.0),
               headerSplashColor: Colors.black12,
               contentBackgroundColor: Colors.white,
               contentPadding: EdgeInsets.all(0.0),
-              contentRadius: 0.0,
             ),
             controller: expandedTileController,
             title: Text(controller.SssList[index].titleString, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15)),

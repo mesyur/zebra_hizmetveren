@@ -21,8 +21,8 @@ class Login extends GetView<LoginController>{
             body: ListView(
               children: [
                 const SizedBox(height: 10),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Icon(Icons.arrow_back_ios,color: Colors.transparent,),
@@ -145,9 +145,9 @@ class Login extends GetView<LoginController>{
                                               controller: controller.customPopupMenuController,
                                               child: Container(
                                                 padding: const EdgeInsets.all(3),
-                                                child: Column(
+                                                child: const Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     SizedBox(
                                                         height: 17,
                                                         width: 17,
@@ -203,10 +203,10 @@ class Login extends GetView<LoginController>{
                                             ),
                                           ],
                                         ) :
-                                        Row(
+                                        const Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Text('90+',textDirection: TextDirection.rtl,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 12,letterSpacing: 0,color: Color(0xff363636)),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
                                             SizedBox(width: 5),
                                             Image(

@@ -190,7 +190,7 @@ class EditeMyServicesPageController extends GetxController with StateMixin ,Load
 
 
   Future getImage(ImageSource imageSource,index) async {
-    final pickedFile = await picker.getImage(
+    final pickedFile = await picker.pickImage(
         source: imageSource,
         preferredCameraDevice: CameraDevice.front,
         imageQuality: 75,

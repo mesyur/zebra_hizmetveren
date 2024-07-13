@@ -17,7 +17,7 @@ dependencies:
   provider:
   device_info:
   flutter_spinkit:
-  location: 4.4.0
+  location: ^6.0.2
   lottie:
   uuid:
   flutter_callkit_incoming: 1.0.3+3
@@ -31,7 +31,7 @@ dependencies:
   google_maps_flutter: 2.2.3
   google_places_flutter:
   google_places_for_flutter:
-  flutter_datetime_picker:
+  flutter_datetime_picker_plus:
   rating_dialog:
   intl:
   bs_flutter_buttons:
@@ -58,6 +58,7 @@ dependencies:
   get_storage:
   flutter_ringtone_player:
   widget_circular_animator:
+  u_credit_card:
   flutter_chat_ui: 1.6.6
 
 flutter_icons:

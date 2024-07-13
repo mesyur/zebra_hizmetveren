@@ -9,14 +9,21 @@ import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:flutter_incall_manager/flutter_incall_manager.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:lottie/lottie.dart' as lot;
 import 'package:zebraserviceprovider/help/location_service.dart';
 import '../../help/GetStorage.dart';
 import '../../help/chatStream.dart';
 import '../../help/hive/localStorage.dart';
 import '../../help/loadingClass.dart';
+import '../Repository/ChatApi.dart';
 import '../Repository/MyServicesApi.dart';
+import '../model/CardListModel.dart';
 import '../model/CategoryModel.dart';
+import '../model/ChatListModel.dart';
+import '../model/CreditListModel.dart';
+import '../model/Global.dart';
 import '../model/OpenConversionModel.dart';
 import '../model/ServicesDetailModel.dart';
 import '../model/SubCategory2Model.dart';
@@ -39,7 +46,8 @@ class MyState<T1,T2,T3>{
 abstract class MainPageBaseController<T1,T2,T3> extends GetxController with StateMixin<MyState<T1,T2,T3>> ,LoadingDialog, WidgetsBindingObserver{}
 
 
-class MainPageController extends MainPageBaseController<CategoryModel,SubCategoryModel,SubCategory2Model>{
+//class MainPageController extends MainPageBaseController<CategoryModel,SubCategoryModel,SubCategory2Model>{
+class MainPageController extends GetxController with StateMixin ,LoadingDialog, WidgetsBindingObserver{
   InitialController initialController = Get.find();
   LocationService locationService = LocationService();
   final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -55,12 +63,16 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   RxInt startPriceOrg = 0.obs;
   RxInt startPrice = 0.obs;
   int increaseDecreasePrice = 0;
+  RxString myBalance = ''.obs;
   bool loadingMap = true;
   RxBool conversionClosed = false.obs;
   late OpenConversionModel oCM;
-
-
-
+  Rxn<CreditListModel> creditListModel = Rxn<CreditListModel>();
+  Rxn<CardListModel> cardListModel = Rxn<CardListModel>();
+  RxInt selectedCreditIndex = 999.obs;
+  RxInt selectedCreditId = 0.obs;
+  RxString selectedCreditName = ''.obs;
+  Rxn<ChatListModel> chatListModel = Rxn<ChatListModel>();
 
 
 
@@ -136,6 +148,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
         initialController.socketConnected.value ? initialController.socket.emit("marker",[{
           "taxiUserId": value.data[0].userId,
           "taxiUserName": value.data[0].categoryName,
+          "scores": value.data[0].scores,
           "taxiTypeId": value.data[0].id,
           "latitude": e.latitude,
           "longitude": e.longitude,
@@ -149,6 +162,32 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
       return Future.error("error");
     });
   }
+
+
+
+  getCreditListApi()async{
+    MyServicesApi().getCreditListApi().then((value){
+      creditListModel.value = value;
+    },onError: (e){});
+  }
+
+
+
+  getCardListApi()async{
+    showDialogBox();
+    MyServicesApi().getCardListApi().then((value){
+      Get.back();
+      cardListModel.value = value;
+      Get.toNamed('MyCards',arguments: [value,selectedCreditId.value,selectedCreditName.value])!.then((value) => getBalanceApi());
+    },onError: (e){
+      Get.back();
+    });
+  }
+
+
+
+
+
 
 
 
@@ -187,7 +226,6 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     });
   }
 
-
   var callsx;
 
   ///********************* Call Checker ************************
@@ -197,6 +235,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
       callsx = calls;
       callsx.isNotEmpty ? initialController.socket.emit('callAccepted',[{
         "id": box.read('Firebase')['callerId'],
+        "userId": box.read('Firebase')['userId'],
         "name": "Murad",
         "socketChannelRandom": box.read('Firebase')['socketChannel']
       }]) : null;
@@ -215,16 +254,16 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
   closeDialog()async{
     globals.offerIsOpen ? Get.back() : null;
-    globals.offerIsOpen ? await FlutterRingtonePlayer.stop() : null;
+    globals.offerIsOpen ? await FlutterRingtonePlayer().stop() : null;
     globals.offerIsOpen = false;
-    await FlutterRingtonePlayer.play(fromAsset: "assets/delete.mp3", looping: false, asAlarm: false,volume: 10);
+    await FlutterRingtonePlayer().play(fromAsset: "assets/delete.mp3", looping: false, asAlarm: false,volume: 10);
   }
 
 
 
   showChoseDialog({userData})async{
     globals.offerIsOpen = true;
-    await FlutterRingtonePlayer.play(fromAsset: "assets/newRequest.mp3", looping: true, asAlarm: false,volume: 10);
+    await FlutterRingtonePlayer().play(fromAsset: "assets/newRequest.mp3", looping: true, asAlarm: false,volume: 10);
     Get.dialog(
       barrierDismissible: false,
       useSafeArea: false,
@@ -265,7 +304,15 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                           const Divider(),
                           Text('Price : ₺${userData['price']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold,fontFamily: 'Montserrat')),
                           const Divider(),
-                          Text('Hour : ${userData['cleanTimeText']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Hour : ${userData['cleanTimeText']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+                              Text('Home : ${userData['homeRomsText']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
+
+                            ],
+                          ),
                           const Divider(),
                           Text('Day : ${userData['selectedDay']}',style: const TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold)),
                           const Divider(),
@@ -339,7 +386,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                               ),
                               onPressed: ()async{
                                 globals.offerIsOpen = false;
-                                await FlutterRingtonePlayer.stop();
+                                await FlutterRingtonePlayer().stop();
                                 initialController.socket.emit('acceptOffer',[{
                                   'id': userData['userData']['user']['id'],
                                   'price': startPrice.value,
@@ -360,7 +407,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                             child: GestureDetector(
                                 onTap: ()async{
                                   globals.offerIsOpen = false;
-                                  await FlutterRingtonePlayer.stop();
+                                  await FlutterRingtonePlayer().stop();
                                   Get.back();
                                 },
                                 child: const Text("Hayır, şu anda sana yardımcı olamam !",style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold))),
@@ -384,7 +431,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
 
   showChoseDialogForOffer({OpenConversionModel? dialogOCM})async{
     globals.conversionOpen = true;
-    await FlutterRingtonePlayer.play(fromAsset: "assets/connected.mp3", looping: false, asAlarm: false,volume: 10);
+    await FlutterRingtonePlayer().play(fromAsset: "assets/connected.mp3", looping: false, asAlarm: false,volume: 10);
     Get.dialog(
       barrierDismissible: false,
       useSafeArea: false,
@@ -491,7 +538,30 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
                                     ),
                                   ),
                                   onPressed: ()async{
-                                    Get.toNamed('/ChatPage',arguments: dialogOCM?.data.zebraUserData.user.id);
+                                    showDialogBox();
+                                    ChatApi().chatListApi().then((value){
+                                      chatListModel.value = value;
+                                      Get.back();
+                                       if(value.data.isEmpty){
+                                         Get.toNamed('/ChatPage',arguments: [dialogOCM?.data.zebraUserData.user.id,0]);
+                                       }else{
+                                         for(var i in chatListModel.value!.data){
+                                           if(i.author.id == dialogOCM?.data.zebraUserData.user.id){
+                                             Get.toNamed('/ChatPage',arguments: [dialogOCM?.data.zebraUserData.user.id,i.chatId]);
+                                             break;
+                                           }else if(chatListModel.value!.data.indexOf(i) == chatListModel.value!.data.indexOf(chatListModel.value!.data.last)){
+                                             if(i.author.id == dialogOCM?.data.zebraUserData.user.id){
+                                               Get.toNamed('/ChatPage',arguments: [dialogOCM?.data.zebraUserData.user.id,i.chatId]);
+                                               break;
+                                             }else{
+                                               Get.toNamed('/ChatPage',arguments: [dialogOCM?.data.zebraUserData.user.id,0]);
+                                             }
+                                           }
+                                         }
+                                       }
+                                    },onError: (e){
+                                      Get.back();
+                                    });
                                   },
                                   child: const Text("mesajlaşma",textDirection: TextDirection.ltr,style: TextStyle(fontWeight: FontWeight.normal,fontSize: 15,letterSpacing: 1.5,color: Colors.white),strutStyle: StrutStyle(forceStrutHeight: true,height: 1,)),
                                 ),
@@ -511,7 +581,12 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   }
 
 
-
+  getBalanceApi()async{
+    MyServicesApi().getBalanceApi().then((value){
+      myBalance.value = value["data"]["balance"].toString();
+    },onError: (e){
+    });
+  }
 
 
 
@@ -520,10 +595,13 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
   @override
   void onReady() {
     super.onReady();
+    change(null, status: RxStatus.success());
     try{
       goToMyLocation();
     }catch(e){}
     getMyServicesDetail();
+    getCreditListApi();
+    getBalanceApi();
     callBack();
   //  WidgetsBinding.instance.addObserver(this);
     initialController.socket.on('inCall', (data)async{
@@ -564,7 +642,7 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     initialController.socket.on('offerCanceled', (data)async{
       if(globals.offerIsOpen){
         globals.offerIsOpen = false;
-        await FlutterRingtonePlayer.stop();
+        await FlutterRingtonePlayer().stop();
         Get.back();
       }else if(globals.conversionOpen){
         Get.back();
@@ -581,10 +659,11 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     });
 
 
+
     initialController.socket.on('closedConversion', (data)async{
       if(globals.conversionOpen){
         conversionClosed.value = true;
-        await FlutterRingtonePlayer.play(fromAsset: "assets/close.mp3", looping: false, asAlarm: false,volume: 10);
+        await FlutterRingtonePlayer().play(fromAsset: "assets/close.mp3", looping: false, asAlarm: false,volume: 10);
       }
     });
 
@@ -592,6 +671,29 @@ class MainPageController extends MainPageBaseController<CategoryModel,SubCategor
     /// TODO DELETE ON PRODUCTION
     print(LocalStorage().getValue("id"));
     print(LocalStorage().getValue("token"));
+
+
+    initialController.socket.on("chat", (data)async{
+      List listOfOtherUsersGlobalIdForChat = [];
+      if(Global.otherUserGlobalIdForChat.value == int.tryParse(data['data']['msg']['author']['id'])){
+      }else{
+        if(box.read('userIds') == null){
+          listOfOtherUsersGlobalIdForChat.add(int.tryParse(data['data']['msg']['author']['id']));
+          await box.write('userIds',listOfOtherUsersGlobalIdForChat);
+        }else{
+          listOfOtherUsersGlobalIdForChat = box.read('userIds');
+          listOfOtherUsersGlobalIdForChat.contains(int.tryParse(data['data']['msg']['author']['id'])) ? null : listOfOtherUsersGlobalIdForChat.add(int.tryParse(data['data']['msg']['author']['id']));
+          // listOfOtherUsersGlobalIdForChat.contains(1) ? null : listOfOtherUsersGlobalIdForChat.add(1);
+          await box.write('userIds',listOfOtherUsersGlobalIdForChat);
+        }
+      }
+      // ChatMainController chatMainController = Get.find();
+      // chatMainController.isClosed ? null : chatMainController.change(null,status: RxStatus.success());
+      change(null, status: RxStatus.success());
+    });
+
+
+
   }
 
 

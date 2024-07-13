@@ -41,9 +41,20 @@ Future<void> _firebaseMessagingBackgroundHandler(message)async{
 }
 
 
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
+
+
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
   await GetStorage.init();
   /// Firebase
   FCM().initialize();
@@ -58,8 +69,8 @@ void main()async{
 
   /// Hive
   final Directory appDocumentDirectory = await getApplicationDocumentsDirectory();
-      Hive.init(appDocumentDirectory.path);
-      await Hive.openBox('local_storage_service_provider');
+  Hive.init(appDocumentDirectory.path);
+  await Hive.openBox('local_storage_service_provider');
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -87,41 +98,43 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context)=> AtlasPortProvider(),
-    builder: (context, _){
-    return GetMaterialApp(
-      title: 'Zebra Hizmet Veren',
-      initialRoute: '/Login',
-      initialBinding: InitialBinding(),
-      debugShowCheckedModeBanner: false,
-      getPages: appRoutes(),
-      translations: TRANSLATION(),
-      locale: LocalStorage().getValue("locale") == null ? const Locale('en') : Locale(LocalStorage().getValue("locale")),
-      fallbackLocale: LocalStorage().getValue("locale") == null ? const Locale('en') : Locale(LocalStorage().getValue("locale")),
-      theme: ThemeData(
-          scrollbarTheme: ScrollbarThemeData(
-            thumbColor: MaterialStateProperty.all(const Color(0xffc00d1e)),
-            radius: const Radius.circular(10.0),
-            thickness: MaterialStateProperty.all(5.0),
-            minThumbLength: 50,
-          ),
-          useMaterial3: true,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          fontFamily: LocalStorage().getValue("locale") == 'tr' ? "Century" : "Century",
-      ),
-      builder: (context,widget) {
-        ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-          Clipboard.setData(ClipboardData(text: "$errorDetails"));
-          return CustomError(errorDetails: errorDetails);
-        };
-        return Stack(
-          children: [
-            widget!,
-            const DropdownAlert()
-          ],
-        );
-      },
-    );
-    }
+        builder: (context, _){
+          return GetMaterialApp(
+            title: 'Zebra Hizmet Veren',
+            initialRoute: '/Login',
+            initialBinding: InitialBinding(),
+            debugShowCheckedModeBanner: false,
+            getPages: appRoutes(),
+            translations: TRANSLATION(),
+            locale: LocalStorage().getValue("locale") == null ? const Locale('en') : Locale(LocalStorage().getValue("locale")),
+            fallbackLocale: LocalStorage().getValue("locale") == null ? const Locale('en') : Locale(LocalStorage().getValue("locale")),
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+              scrollbarTheme: ScrollbarThemeData(
+                thumbColor: MaterialStateProperty.all(const Color(0xffc00d1e)),
+                radius: const Radius.circular(10.0),
+                thickness: MaterialStateProperty.all(5.0),
+                minThumbLength: 50,
+              ),
+              useMaterial3: true,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+              fontFamily: LocalStorage().getValue("locale") == 'tr' ? "Century" : "Century",
+            ),
+            builder: (context,widget) {
+              ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+                Clipboard.setData(ClipboardData(text: "$errorDetails"));
+                return CustomError(errorDetails: errorDetails);
+              };
+              return Stack(
+                children: [
+                  widget!,
+                  const DropdownAlert()
+                ],
+              );
+            },
+          );
+        }
     );
   }
 }

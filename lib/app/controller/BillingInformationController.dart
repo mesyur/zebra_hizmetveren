@@ -73,7 +73,7 @@ class BillingInformationController extends MainPageBaseController<CountriesModel
       }else{
         showDialogBox();
         Map billingInformation = {
-          "type": selectedIndex.value,
+          "type": selectedIndex.value.toString(),
           "name": '${firstNameController.text} ${lastNameController.text}',
           "companyName": companyNameController.text,
           "companyAddress": companyAddressController.text,

@@ -15,8 +15,8 @@ class BillingInformationApi{
 
   Future<BillingInformationSave> getMyTaxApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -42,8 +42,8 @@ class BillingInformationApi{
 
   Future<CountriesModel> getCountriesApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -69,8 +69,8 @@ class BillingInformationApi{
 
   Future<CitiesModel> getCitiesApi({id})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -95,8 +95,8 @@ class BillingInformationApi{
 
   Future<TaxAdminsModel> getTaxAdmin({id})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -123,8 +123,8 @@ class BillingInformationApi{
 
   Future<BillingInformationSave> saveBillingInformation({formData})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";

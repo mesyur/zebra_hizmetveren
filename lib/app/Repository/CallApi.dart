@@ -13,8 +13,8 @@ class CallApi{
 
   Future<CallUserListModel> getCallUserListApi({callUserListMap})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -43,8 +43,8 @@ class CallApi{
 
   Future<LastCallModel> getLastCallUserListApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -71,8 +71,8 @@ class CallApi{
 
   Future blockUnBlockUserApi({blockedUserId})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -102,8 +102,8 @@ class CallApi{
 
   Future favoriteUnFavoriteUsers({callId})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -135,8 +135,8 @@ class CallApi{
 
   Future<BlockedUserModel> blockedUserApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -163,8 +163,8 @@ class CallApi{
 
   Future<FavoriteListModel> favoriteUserApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -189,8 +189,8 @@ class CallApi{
 
   Future rateUserApi({ratedUserId,score})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";

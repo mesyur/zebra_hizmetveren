@@ -3,6 +3,7 @@ import '../bindings/BillingInformationBindings.dart';
 import '../bindings/CallBinding.dart';
 import '../bindings/CallHoursBinding.dart';
 import '../bindings/ChatBinding.dart';
+import '../bindings/ChatMainBinding.dart';
 import '../bindings/ContactUsBinding.dart';
 import '../bindings/EditeMyServicesPageBinding.dart';
 import '../bindings/HelpBinding.dart';
@@ -12,8 +13,10 @@ import '../bindings/LegalInformationBinding.dart';
 import '../bindings/LegalInformationPageViewBinding.dart';
 import '../bindings/LoginBinding.dart';
 import '../bindings/MainPageBinding.dart';
+import '../bindings/MyCardsBinding.dart';
 import '../bindings/MyServicesBinding.dart';
 import '../bindings/NewServicesBinding.dart';
+import '../bindings/OfferListBinding.dart';
 import '../bindings/PinBinding.dart';
 import '../bindings/ProfileBinding.dart';
 import '../bindings/RegisterBinding.dart';
@@ -25,6 +28,7 @@ import '../view/Auth/Register/Register.dart';
 import '../view/BillingInformation/BillingInformation.dart';
 import '../view/CallHours/CallHours.dart';
 import '../view/CallPage/CallPage.dart';
+import '../view/Chat/ChatMain/ChatMain.dart';
 import '../view/Chat/ChatPage.dart';
 import '../view/EditeMyServicesPage/EditeMyServicesPage.dart';
 import '../view/Help/Help.dart';
@@ -35,8 +39,10 @@ import '../view/Intro/Intro.dart';
 import '../view/LastCall/BlockedUsers.dart';
 import '../view/LastCall/FavoriteUsers.dart';
 import '../view/LastCall/LastCall.dart';
+import '../view/MyCards/MyCards.dart';
 import '../view/MyServices/MyServices.dart';
 import '../view/NewServices/NewServices.dart';
+import '../view/OfferList/OfferList.dart';
 import '../view/WIDGETS/LegalInformationPageView.dart';
 import '../view/MainPage/MainPage.dart';
 import '../view/Profile/Profile.dart';
@@ -167,6 +173,24 @@ appRoutes() => [
       name: '/ChatPage',
       page: () => const ChatPage(),
       binding: ChatBinding(),
+      transitionDuration: const Duration(milliseconds: 0)
+  ),
+  GetPage(
+      name: '/MyCards',
+      page: () => const MyCards(),
+      binding: MyCardsBinding(),
+      transitionDuration: const Duration(milliseconds: 0)
+  ),
+  GetPage(
+      name: '/ChatMain',
+      page: () => const ChatMain(),
+      binding: ChatMainBinding(),
+      transitionDuration: const Duration(milliseconds: 0)
+  ),
+  GetPage(
+      name: '/OfferList',
+      page: () => const OfferList(),
+      binding: OfferListBinding(),
       transitionDuration: const Duration(milliseconds: 0)
   ),
 ];

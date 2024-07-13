@@ -109,14 +109,15 @@ class ProfileController extends GetxController with StateMixin<UserInfoModel> ,L
           hideDialog();
           AlertController.show("Update Account", "Profil bilgileri başarıyla değiştirildi", TypeAlert.success);
           Get.back();
-          UserInfoApi().getUserInfo().then((value){
-            if(value.data.user.isActive == 0){
+          UserInfoApi().getUserInfo().then((valueX){
+            if(valueX.data.user.isActive == 0){
               LocalStorage().setValue("login",false);
               Get.offAllNamed("/Login");
             }else{
-              initialController.userData = value.data.user;
+              initialController.userData = valueX.data.user;
             }
-          },onError: (e){});
+          },onError: (e){
+          });
         },onError: (e){
           hideDialog();
         });

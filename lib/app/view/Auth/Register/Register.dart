@@ -150,10 +150,10 @@ class Register extends GetView<RegisterController>{
                                               controller: controller.controller0,
                                               child: Container(
                                                 padding: const EdgeInsets.all(3),
-                                                child: Column(
+                                                child: const Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     SizedBox(
                                                         height: 12,
                                                         width: 12,
@@ -260,10 +260,10 @@ class Register extends GetView<RegisterController>{
                                               controller: controller.controller1,
                                               child: Container(
                                                 padding: const EdgeInsets.all(0),
-                                                child: Column(
+                                                child: const Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     SizedBox(
                                                         height: 12,
                                                         width: 12,

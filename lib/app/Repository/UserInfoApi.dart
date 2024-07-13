@@ -11,8 +11,8 @@ class UserInfoApi{
   Dio dio = Dio();
   Future<UserInfoModel> getUserInfo()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -39,8 +39,8 @@ class UserInfoApi{
   /// ToDo change model
   Future<PinModel> updateUserDataApi({profileData})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";
@@ -68,8 +68,8 @@ class UserInfoApi{
 
   Future deleteUserApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "POST";
     dio.options.headers["Accept"] = "application/json";

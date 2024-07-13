@@ -319,19 +319,19 @@ class NewServices extends GetView<NewServicesController>{
                                 controller: controller.customPopupMenuController,
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 25),
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    children: const [
+                                    children: [
                                       SizedBox(
                                           height: 17,
                                           width: 17,
                                           child: Image(image: AssetImage("assets/icons/error.gif"),)),
                                     ],
                                   ),
-                                )) : Padding(
-                              padding: const EdgeInsets.only(top: 20),
+                                )) : const Padding(
+                              padding: EdgeInsets.only(top: 20),
                               child: Column(
-                                children: const [
+                                children: [
                                   Icon(Icons.home_repair_service_outlined, color: Colors.black54,size: 25,),
                                 ],
                               ),

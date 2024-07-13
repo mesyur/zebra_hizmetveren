@@ -9,8 +9,8 @@ class MainApi{
   Dio dio = Dio();
   Future<CategoryModel> getCategoryApi()async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -36,8 +36,8 @@ class MainApi{
 
   Future<SubCategoryModel> getSubCategoryApi({id})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";
@@ -64,8 +64,8 @@ class MainApi{
 
   Future<SubCategory2Model> getSubCategory2Api({id})async{
     dio.options.baseUrl = Urls.appApiBaseUrl;
-    dio.options.receiveTimeout = 5000;
-    dio.options.connectTimeout = 10000;
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 10);
     dio.options.headers["authorization"] = "Bearer ${LocalStorage().getValue("token")}";
     dio.options.method = "GET";
     dio.options.headers["Accept"] = "application/json";

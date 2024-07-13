@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,8 @@ import 'package:uuid/uuid.dart';
 import 'package:zebraserviceprovider/app/controller/ChatController.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
+import '../../Repository/ChatApi.dart';
 
 class ChatPage extends GetView<ChatController>{
   const ChatPage({super.key});
@@ -58,8 +62,23 @@ class ChatPage extends GetView<ChatController>{
                             text: '${controller.staticChat[index]}',
                           );
                           controller.messages.insert(0, textMessage);
+                          var sendChatMap = {
+                            "author": {
+                              "id": controller.user.id, // sender id / my id
+                              "firstName": controller.user.firstName,
+                              "lastName": controller.user.lastName,
+                              "imageUrl": controller.user.imageUrl,
+                              "createdAt": controller.user.createdAt
+                            },
+                            "id": textMessage.id.toString(),
+                            "userId": Get.arguments[0], // other user id
+                            "text": textMessage.text,
+                            "type": "text",
+                            "createdAt": textMessage.createdAt
+                          };
+                          ChatApi().sendMessage(data: jsonEncode(sendChatMap));
                           controller.initialController.socket.emit('chat',[{
-                            'id' : Get.arguments,
+                            'id' : Get.arguments[0],
                             'msg' : textMessage
                           }]);
                           controller.addMsgController.clear();
@@ -127,8 +146,23 @@ class ChatPage extends GetView<ChatController>{
                           text: controller.addMsgController.text,
                         );
                         controller.messages.insert(0, textMessage);
+                        var sendChatMap = {
+                          "author": {
+                            "id": controller.user.id, // sender id / my id
+                            "firstName": controller.user.firstName,
+                            "lastName": controller.user.lastName,
+                            "imageUrl": controller.user.imageUrl,
+                            "createdAt": controller.user.createdAt
+                          },
+                          "id": textMessage.id.toString(),
+                          "userId": Get.arguments[0], // other user id
+                          "text": textMessage.text,
+                          "type": "text",
+                          "createdAt": textMessage.createdAt
+                        };
+                        ChatApi().sendMessage(data: jsonEncode(sendChatMap));
                         controller.initialController.socket.emit('chat',[{
-                          'id' : Get.arguments,
+                          'id' : Get.arguments[0],
                           'msg' : textMessage
                         }]);
                         controller.addMsgControllerText.value = '';

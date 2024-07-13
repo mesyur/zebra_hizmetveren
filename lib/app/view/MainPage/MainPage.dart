@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:u_credit_card/u_credit_card.dart';
+
+import '../../../help/GetStorage.dart';
 import '../../../help/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -73,7 +77,7 @@ class MainPage extends GetView<MainPageController>{
 
                                   Container(
                                     width: MediaQuery.of(context).size.width - 75,
-                                    margin: const EdgeInsets.only(top: 50),
+                                    margin: const EdgeInsets.only(top: 30),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,10 +87,11 @@ class MainPage extends GetView<MainPageController>{
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Text("${LocalStorage().getValue("firstName")} ${LocalStorage().getValue("lastName")}",style: const TextStyle(fontSize: 25,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold)),
+                                            Text("${LocalStorage().getValue("firstName")} ${LocalStorage().getValue("lastName")}",style: const TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold)),
                                             const Icon(Icons.notifications_active_outlined,size: 30,),
                                           ],
                                         ),
+                                        Obx(() => Text("Kalan Kredi : ${controller.myBalance.value}",style: const TextStyle(fontSize: 12,color: Colors.black87,letterSpacing: 1.5,fontWeight: FontWeight.w300)))
                                       ],
                                     ),
                                   ),
@@ -145,8 +150,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.to(const InsideProfile(),duration: const Duration(microseconds: 0));
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.person_outlined),
                                             SizedBox(width: 10),
                                             Text("Profile",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -172,8 +177,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.toNamed('/LastCall');
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.av_timer_outlined),
                                             SizedBox(width: 10),
                                             Text("Last Calls",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -185,8 +190,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.toNamed('/CallHours');
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.access_time_outlined),
                                             SizedBox(width: 10),
                                             Text("Çağrı Kabul Saatlerim",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -198,8 +203,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.toNamed('/MyServices');
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.join_inner),
                                             SizedBox(width: 10),
                                             Text("Hizmetlerim",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -211,8 +216,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.toNamed('/NewServices');
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.add),
                                             SizedBox(width: 10),
                                             Text("Hizmet Ekle",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -222,13 +227,30 @@ class MainPage extends GetView<MainPageController>{
                                       const SizedBox(height: 20),
                                       GestureDetector(
                                         onTap: (){
-                                          Get.toNamed('/ChatPage',arguments: 1);
+                                          Get.toNamed('/OfferList');
+                                        },
+                                        child: const Row(
+                                          children: [
+                                            Icon(Icons.local_offer_outlined),
+                                            SizedBox(width: 10),
+                                            Text("My Offers",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      GestureDetector(
+                                        onTap: (){
+                                          Get.toNamed('/ChatMain')!.then((value){
+                                            controller.change(null,status: RxStatus.success());
+                                          });
                                         },
                                         child: Row(
-                                          children: const [
-                                            Icon(Icons.add),
-                                            SizedBox(width: 10),
-                                            Text("Chat",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
+                                          children: [
+                                            const Icon(Icons.chat_bubble_outline),
+                                            const SizedBox(width: 10),
+                                            const Text("Chat",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold)),
+                                            const SizedBox(width: 5),
+                                            controller.obx((state) => Icon(Icons.lens,size: 10,color: box.read('userIds') != null ? box.read('userIds').isNotEmpty ? Colors.red : Colors.transparent : Colors.transparent))
                                           ],
                                         ),
                                       ),
@@ -237,8 +259,8 @@ class MainPage extends GetView<MainPageController>{
                                         onTap: (){
                                           Get.toNamed('/Help');
                                         },
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Icon(Icons.live_help_outlined),
                                             SizedBox(width: 10),
                                             Text("Help",style: TextStyle(fontSize: 15,color: Colors.black,letterSpacing: 2.5,fontWeight: FontWeight.bold))
@@ -247,6 +269,65 @@ class MainPage extends GetView<MainPageController>{
                                       ),
                                     ],
                                   ),
+
+
+
+
+
+                                  Obx(() => controller.creditListModel.value == null ? Visibility(visible: false,child: Container()) :
+                                  Column(
+                                    children: [
+                                      Wrap(
+                                        runSpacing: 5,
+                                        children: List.generate(controller.creditListModel.value!.data.length, (index) => GestureDetector(
+                                          onTap: (){
+                                            if(controller.selectedCreditIndex.value == index){
+                                              controller.selectedCreditIndex.value = 999;
+                                              controller.selectedCreditId.value = 0;
+                                              controller.selectedCreditName.value = '';
+                                            }else{
+                                              controller.selectedCreditIndex.value = index;
+                                              controller.selectedCreditId.value = controller.creditListModel.value!.data[index].id;
+                                              controller.selectedCreditName.value = controller.creditListModel.value!.data[index].name;
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color: controller.selectedCreditIndex.value == index ? const Color(0xff04A558) : Colors.transparent,
+                                              border: Border.all(color: const Color(0xffE1E2E5)),
+                                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                                            ),
+                                            child: Text(controller.creditListModel.value!.data[index].name,style: TextStyle(color: controller.selectedCreditIndex.value == index ? Colors.white : Colors.black,fontWeight: FontWeight.normal,fontSize: 12)),
+                                          ),
+                                        )),
+                                      ),
+                                      const SizedBox(height: 15),
+                                      controller.selectedCreditId.value == 0 ? Container() : SizedBox(
+                                        width: 245,
+                                        height: 40,
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          onPressed: ()async{
+                                           // Get.back();
+                                           // await Future.delayed(const Duration(milliseconds: 250));
+                                            controller.getCardListApi();
+                                          },
+                                          color: const Color(0xff04A558),
+                                          shape: const RoundedRectangleBorder(
+                                              side: BorderSide(color: Colors.black12),
+                                              borderRadius: BorderRadius.all(Radius.circular(5))
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 0),
+                                            child: Text('${controller.selectedCreditName.value} ÖDE (KDV Dahil)', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )),
+
 
 
 
@@ -290,8 +371,8 @@ class MainPage extends GetView<MainPageController>{
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: <Widget>[
-                                            Column(
-                                              children: const [
+                                            const Column(
+                                              children: [
                                                 Image(image: AssetImage('assets/app/logo.png'),height: 30),
                                               ],
                                             ),
@@ -433,7 +514,7 @@ class MainPage extends GetView<MainPageController>{
                       color: Colors.black,
                       borderRadius: BorderRadius.all(Radius.circular(100.0),),
                     ),
-                    child: const Icon(Icons.my_location,size: 25.0,color: Colors.white,),
+                    child: Obx(() => Icon(Icons.my_location,size: 25.0,color: controller.initialController.socketConnected.value ? Colors.lightGreen : Colors.white)),
                   ),
                 ),
               ),
@@ -447,9 +528,9 @@ class MainPage extends GetView<MainPageController>{
                   onTap: (){
                     controller.key.currentState?.openDrawer();
                   },
-                  child: Stack(
+                  child: const Stack(
                     alignment: Alignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.lens,color: Colors.black,size: 51),
                       Icon(Icons.lens,color: Colors.white,size: 50),
                       Icon(Icons.menu,size: 30,),
