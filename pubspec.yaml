@@ -11,20 +11,20 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio:
   hive:
-  get:
+  get: ^4.6.6
   flutter_dropdown_alert:
-  path_provider:
+  path_provider: ^2.0.15
   provider:
   device_info:
   flutter_spinkit:
-  location: ^6.0.2
+  location:
   lottie:
   uuid:
   flutter_callkit_incoming: 1.0.3+3
   custom_pop_up_menu:
   statusbarmanager:
   advanced_icon:
-  url_launcher: 6.1.6
+  url_launcher: ^6.2.6
   flutter_launch:
   custom_timer: ^0.2.3
   whatsapp_unilink:
@@ -33,8 +33,8 @@ dependencies:
   google_places_for_flutter:
   flutter_datetime_picker_plus:
   rating_dialog:
-  intl:
-  bs_flutter_buttons:
+  intl: ^0.19.0
+  #bs_flutter_buttons: ^1.2.8
   avatar_glow:
   assets_audio_player:
   flutter_animarker:
@@ -44,7 +44,7 @@ dependencies:
   quickalert:
   toggle_switch:
   flutter_expanded_tile:
-  flutter_webrtc:
+  flutter_webrtc: ^0.11.1
   proximity_sensor:
   http_parser:
   image_picker:
@@ -55,11 +55,12 @@ dependencies:
   flutter_incall_manager:
     git: https://github.com/manozzreddy/flutter-incall-manager.git
   socket_io_client:  2.0.1
-  get_storage:
+  get_storage: ^2.1.1
   flutter_ringtone_player:
   widget_circular_animator:
   u_credit_card:
-  flutter_chat_ui: 1.6.6
+  flutter_chat_ui:
+  hexcolor: ^3.0.1
 
 flutter_icons:
   android: true
@@ -87,3 +88,6 @@ flutter:
     - family: Century
       fonts:
         - asset: assets/font/Century Gothic.ttf
+
+dependency_overrides:
+  win32: ^5.5.4

@@ -52,35 +52,79 @@ class MyHttpOverrides extends HttpOverrides{
 
 
 
-void main()async{
-  WidgetsFlutterBinding.ensureInitialized();
-  HttpOverrides.global = MyHttpOverrides();
-  await GetStorage.init();
-  /// Firebase
-  FCM().initialize();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+void main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    HttpOverrides.global = MyHttpOverrides();
+    await GetStorage.init();
+    
+    /// Firebase
+    FCM().initialize();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  /// Firebase
-  // await Firebase.initializeApp();
-  // FirebaseMessaging.instance;
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // FCM fcm = FCM();
-  // fcm.initialize();
+    /// Hive
+    final Directory appDocumentDirectory = await getApplicationDocumentsDirectory();
+    Hive.init(appDocumentDirectory.path);
+    await Hive.openBox('local_storage_service_provider');
 
-  /// Hive
-  final Directory appDocumentDirectory = await getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDirectory.path);
-  await Hive.openBox('local_storage_service_provider');
+    /// UI Settings
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Color(0xff000000),
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ));
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarBrightness: Brightness.dark,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: Color(0xff000000),
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
-  runApp(const MyApp());
+    runApp(const MyApp());
+  } catch (e) {
+    runApp(MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 50,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Uygulama başlatılırken bir hata oluştu',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  e.toString(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    main();
+                  },
+                  child: const Text('Yeniden Dene'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ));
+  }
 }
 
 class MyApp extends StatefulWidget {

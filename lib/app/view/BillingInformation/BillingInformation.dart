@@ -1,4 +1,4 @@
-import 'package:bs_flutter_buttons/bs_flutter_buttons.dart';
+//import 'package:bs_flutter_buttons/bs_flutter_buttons.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -541,39 +541,32 @@ class BillingInformation extends GetView<BillingInformationController>{
                                   boxShadow: [
                                     BoxShadow(
                                       color: const Color(0xff000000).withOpacity(0.0),
-                                      offset: const Offset(0.0, 0.5), //(x,y)
+                                      offset: const Offset(0.0, 0.5),
                                       blurRadius: 5,
                                     ),
                                   ],
                                 ),
-                                child: BsDropdownButton(
-                                  toggleMenu: (_) => BsButton(
-                                    onPressed: () => _.toggle(),
-                                    style: const BsButtonStyle(
-                                        color: Colors.black54,
-                                        backgroundColor: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(7))),
-                                    width: Get.width,
-                                    size: BsButtonSize.btnLg,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    suffixIcon: Icons.arrow_drop_down,
-                                    label: Text(controller.selectedCountry.value == '' ? 'Countries' : controller.selectedCountry.value),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                                    border: InputBorder.none,
                                   ),
-                                  dropdownDirection: BsDropdownDirection.bottom,
-                                  dropdownMenu:  BsDropdownMenu(
-                                    children: List.generate(state.item1!.data.length, (index) => BsDropdownItem(
-                                        child: SizedBox(width: 170,child: Text(state.item1!.data[index].name)),
-                                      onPressed: (){
-                                        controller.selectedCountry.value = state.item1!.data[index].name;
-                                        controller.selectedCountryId.value = state.item1!.data[index].countryId;
-                                        controller.selectedCity.value = '';
-                                        controller.selectedTax.value = '';
-                                        controller.getCities(state.item1!.data[index].countryId);
-                                      },
-                                    ),
-                                    ),
-                                  ),
+                                  value: controller.selectedCountry.value.isEmpty ? null : controller.selectedCountry.value,
+                                  hint: Text('Countries', style: TextStyle(color: Colors.black54)),
+                                  items: state.item1?.data.map((item) => DropdownMenuItem(
+                                    value: item.name,
+                                    child: Text(item.name),
+                                  )).toList() ?? [],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      final selectedItem = state.item1!.data.firstWhere((element) => element.name == value);
+                                      controller.selectedCountry.value = value;
+                                      controller.selectedCountryId.value = selectedItem.countryId;
+                                      controller.selectedCity.value = '';
+                                      controller.selectedTax.value = '';
+                                      controller.getCities(selectedItem.countryId);
+                                    }
+                                  },
                                 ),
                               ),
                             ],
@@ -594,38 +587,31 @@ class BillingInformation extends GetView<BillingInformationController>{
                                   boxShadow: [
                                     BoxShadow(
                                       color: const Color(0xff000000).withOpacity(0.0),
-                                      offset: const Offset(0.0, 0.5), //(x,y)
+                                      offset: const Offset(0.0, 0.5),
                                       blurRadius: 5,
                                     ),
                                   ],
                                 ),
-                                child: BsDropdownButton(
-                                  toggleMenu: (_) => BsButton(
-                                    onPressed: () => _.toggle(),
-                                    style: const BsButtonStyle(
-                                        color: Colors.black54,
-                                        backgroundColor: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(7))),
-                                    width: Get.width,
-                                    size: BsButtonSize.btnLg,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    suffixIcon: Icons.arrow_drop_down,
-                                    label: Text(controller.selectedCity.value == '' ? 'Cities' : controller.selectedCity.value),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                                    border: InputBorder.none,
                                   ),
-                                  dropdownDirection: BsDropdownDirection.bottom,
-                                  dropdownMenu:  BsDropdownMenu(
-                                    children: List.generate(state.item2!.data.length, (index) => BsDropdownItem(
-                                      child: SizedBox(width: 170,child: Text(state.item2!.data[index].name)),
-                                      onPressed: (){
-                                        controller.selectedCity.value = state.item2!.data[index].name;
-                                        controller.selectedCityId.value = state.item2!.data[index].cityId;
-                                        controller.selectedTax.value = '';
-                                        controller.getTaxAdmin(state.item2!.data[index].cityId);
-                                      },
-                                    ),
-                                    ),
-                                  ),
+                                  value: controller.selectedCity.value.isEmpty ? null : controller.selectedCity.value,
+                                  hint: Text('Cities', style: TextStyle(color: Colors.black54)),
+                                  items: state.item2?.data.map((item) => DropdownMenuItem(
+                                    value: item.name,
+                                    child: Text(item.name),
+                                  )).toList() ?? [],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      final selectedItem = state.item2!.data.firstWhere((element) => element.name == value);
+                                      controller.selectedCity.value = value;
+                                      controller.selectedCityId.value = selectedItem.cityId;
+                                      controller.selectedTax.value = '';
+                                      controller.getTaxAdmin(selectedItem.cityId);
+                                    }
+                                  },
                                 ),
                               ),
                             ],
@@ -647,36 +633,29 @@ class BillingInformation extends GetView<BillingInformationController>{
                                   boxShadow: [
                                     BoxShadow(
                                       color: const Color(0xff000000).withOpacity(0.0),
-                                      offset: const Offset(0.0, 0.5), //(x,y)
+                                      offset: const Offset(0.0, 0.5),
                                       blurRadius: 5,
                                     ),
                                   ],
                                 ),
-                                child: BsDropdownButton(
-                                  toggleMenu: (_) => BsButton(
-                                    onPressed: () => _.toggle(),
-                                    style: const BsButtonStyle(
-                                        color: Colors.black54,
-                                        backgroundColor: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(7))),
-                                    width: Get.width,
-                                    size: BsButtonSize.btnLg,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    suffixIcon: Icons.arrow_drop_down,
-                                    label: Text(controller.selectedTax.value == '' ? 'Tax Admin' : controller.selectedTax.value.length > 23 ? "${controller.selectedTax.value.substring(0,22)}..." : controller.selectedTax.value),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                                    border: InputBorder.none,
                                   ),
-                                  dropdownDirection: BsDropdownDirection.bottom,
-                                  dropdownMenu:  BsDropdownMenu(
-                                    children: List.generate(state.item3!.data!.length, (index) => BsDropdownItem(
-                                      child: SizedBox(width: 170,child: Text(state.item3!.data![index].name)),
-                                      onPressed: (){
-                                        controller.selectedTax.value = state.item3!.data![index].name;
-                                        controller.selectedTaxId.value = state.item3!.data![index].taxAdminId;
-                                      },
-                                    ),
-                                    ),
-                                  ),
+                                  value: controller.selectedTax.value.isEmpty ? null : controller.selectedTax.value,
+                                  hint: Text('Tax Admin', style: TextStyle(color: Colors.black54)),
+                                  items: state.item3?.data?.map((item) => DropdownMenuItem(
+                                    value: item.name,
+                                    child: Text(item.name.length > 23 ? "${item.name.substring(0,22)}..." : item.name),
+                                  )).toList() ?? [],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      final selectedItem = state.item3!.data!.firstWhere((element) => element.name == value);
+                                      controller.selectedTax.value = value;
+                                      controller.selectedTaxId.value = selectedItem.taxAdminId;
+                                    }
+                                  },
                                 ),
                               ),
                             ],
